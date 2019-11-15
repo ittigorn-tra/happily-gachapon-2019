@@ -101,10 +101,10 @@ function love.load()
   -- SET VARIABLES
   game_state          = 1
   button_state        = 0
+  ball_circling_state = false
   since_last_pressed  = 0
   pong_kicked         = false
   current_dt          = 0
-  pong_clicked        = false
   state_1_timer       = state_1_pause_duration
   prize_key           = 'blue'
 
@@ -142,13 +142,13 @@ function love.load()
   barriers.barrier_t.shape    = love.physics.newRectangleShape(barriers.barrier_t.x, barriers.barrier_t.y, barriers.barrier_t.w, barriers.barrier_t.h)
   barriers.barrier_t.fixture  = love.physics.newFixture(barriers.barrier_t.body, barriers.barrier_t.shape)
 
-  barriers.ledge.body     = love.physics.newBody(world, barriers.ledge.w/2, barriers.ledge.h/2)
-  barriers.ledge.shape    = love.physics.newRectangleShape(barriers.ledge.x, barriers.ledge.y, barriers.ledge.w, barriers.ledge.h)
-  barriers.ledge.fixture  = love.physics.newFixture(barriers.ledge.body, barriers.ledge.shape)
+  barriers.ledge.body         = love.physics.newBody(world, barriers.ledge.w/2, barriers.ledge.h/2)
+  barriers.ledge.shape        = love.physics.newRectangleShape(barriers.ledge.x, barriers.ledge.y, barriers.ledge.w, barriers.ledge.h)
+  barriers.ledge.fixture      = love.physics.newFixture(barriers.ledge.body, barriers.ledge.shape)
 
-  barriers.wedge.body     = love.physics.newBody(world, barriers.wedge.w/2, barriers.wedge.h/2)
-  barriers.wedge.shape    = love.physics.newRectangleShape(barriers.wedge.x, barriers.wedge.y, barriers.wedge.w, barriers.wedge.h, barriers.wedge.r)
-  barriers.wedge.fixture  = love.physics.newFixture(barriers.wedge.body, barriers.wedge.shape)
+  barriers.wedge.body         = love.physics.newBody(world, barriers.wedge.w/2, barriers.wedge.h/2)
+  barriers.wedge.shape        = love.physics.newRectangleShape(barriers.wedge.x, barriers.wedge.y, barriers.wedge.w, barriers.wedge.h, barriers.wedge.r)
+  barriers.wedge.fixture      = love.physics.newFixture(barriers.wedge.body, barriers.wedge.shape)
 
   pong.body           = love.physics.newBody(world, pong.initial_pos.x, pong.initial_pos.y, "dynamic") --place the body in the center of the world and make it dynamic, so it can move around
   pong.shape          = love.physics.newCircleShape(206/2)
@@ -203,7 +203,7 @@ function love.update(dt)
   if animated_graphics.rewards.currentTime >= animated_graphics.rewards.duration then
     animated_graphics.rewards.currentTime = animated_graphics.rewards.currentTime - animated_graphics.rewards.duration
   end
-  if game_state == 2 then
+  if ((game_state == 2) or ball_circling_state) then
     animated_graphics.balls.currentTime = animated_graphics.balls.currentTime + dt
     if animated_graphics.balls.currentTime >= animated_graphics.balls.duration then
       animated_graphics.balls.currentTime = animated_graphics.balls.currentTime - animated_graphics.balls.duration
@@ -211,7 +211,7 @@ function love.update(dt)
   end
 
   -- detect click on the button
-  if love.mouse.isDown(1) then
+  if love.mouse.isDown(1) or love.mouse.isDown(2) then
     local x, y = love.mouse.getPosition()
     -- check if x, y is the same as button the image
     if  (
@@ -228,11 +228,13 @@ function love.update(dt)
         sounds.press:play()
       end
       game_state = 2
-    else
-      button_state = 0
+    elseif  ((x >= 100) and (x <= 100 + 500) and (y >= 500) and (y <= 500 + 830) and (game_state < 2) and (state_1_timer >= state_1_pause_duration)) then
+      ball_circling_state = true
     end
+  else
+    button_state = 0
+    ball_circling_state = false
   end
-
 end -- end love.update()
 
 
@@ -272,7 +274,7 @@ function love.draw()
 
   
 
-  -- show price state
+  -- show prize state
   if game_state == 4 then
     love.graphics.setColor(0,0,0,show_price_fade_percentage)
     love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
@@ -286,14 +288,10 @@ function love.draw()
     love.graphics.draw(static_graphics.prizes, love.graphics.getWidth()/2 - (static_graphics.prizes:getWidth()/2), love.graphics.getHeight()/2 - (static_graphics.prizes:getHeight()/2), 0, 1, 1)
   end
 
-    -- show prizes touch area
-    if paint_hidden_structures then
-      love.graphics.setColor(0,0,0,.3)
-      love.graphics.rectangle('fill', 665, 450, 350, 380)
-    end
 
 
-  -- barriers
+
+  -- show barriers
   if paint_hidden_structures then
     love.graphics.setColor(0.63, 0.28, 0.05)
     love.graphics.polygon("fill", barriers.barrier_l.body:getWorldPoints(barriers.barrier_l.shape:getPoints()))
@@ -302,6 +300,16 @@ function love.draw()
     love.graphics.polygon("fill", barriers.barrier_t.body:getWorldPoints(barriers.barrier_t.shape:getPoints()))
     love.graphics.polygon("fill", barriers.ledge.body:getWorldPoints(barriers.ledge.shape:getPoints()))
     love.graphics.polygon("fill", barriers.wedge.body:getWorldPoints(barriers.wedge.shape:getPoints()))
+  end
+  -- show prizes touch area
+  if paint_hidden_structures then
+    love.graphics.setColor(0,0,0,.3)
+    love.graphics.rectangle('fill', 665, 450, 350, 380)
+  end
+  -- show ball window touch area
+  if paint_hidden_structures then
+    love.graphics.setColor(0.0,0.0,1.0,.3)
+    love.graphics.rectangle('fill', 100, 500, 500, 830)
   end
 
   if show_debug_messages then
@@ -312,7 +320,6 @@ function love.draw()
     love.graphics.print('Since Last Pressed: ' ..since_last_pressed, 50, 90)
     love.graphics.print('Pong kicked: ' ..(pong_kicked and 'true' or 'false'), 50, 110)
     love.graphics.print('Current dt: ' ..current_dt, 50, 130)
-    love.graphics.print('Pong clicked: ' ..(pong_clicked and 'true' or 'false'), 50, 150)
     love.graphics.print('State 1 Timer: ' ..state_1_timer, 50, 170)
     local x, y = pong.body:getLinearVelocity()
     love.graphics.print('Pong Velocity X: ' ..x, 50, 250)
