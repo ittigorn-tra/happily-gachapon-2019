@@ -22,8 +22,23 @@ function newAnimation(image, width, height, duration, frames)
   return animation
 end
 
+function load_colliding_sound()
+  local sound_arr = {}
+  table.insert(sound_arr, love.audio.newSource("sounds/colliding.mp3", "static"))
+  for i = 1, 10, 1 do
+    table.insert(sound_arr, sound_arr[1]:clone())
+  end
+  return sound_arr
+end
+
 function determine_prize()
-  prize_key = 'red'
+  local x = love.math.random(0, 99)
+  
+  for k, v in pairs(prize_chance_map) do
+    if (x >= v.min) and (x <= v.max) then
+      prize_key = k
+    end
+  end
 end
 
 function reset_game_state() -- return to default state
@@ -38,7 +53,7 @@ end
 
 function enter_state_2(dt) -- determining prize and drop ball state
   state_1_timer = 0
-  bg_music:setVolume(dimmed_bg_music_volume)
+  sounds.bg_music:setVolume(dimmed_bg_music_volume)
   since_last_pressed = since_last_pressed + dt
   if (not pong_kicked) and (since_last_pressed > (state_2_duration/2)) then
     determine_prize()
@@ -65,7 +80,7 @@ function love.load()
   fullscreen = true
   forceWidth, forceHeight = 1080, 1920
   paintBariers        = false
-  semi_transparent    = true
+  semi_transparent    = false
   show_debug_messages = true
 
   -- CONFIGS
@@ -98,6 +113,7 @@ function love.load()
   -- SET UP PHYSICS
   love.physics.setMeter(64) --the height of a meter our worlds will be 64px
   world = love.physics.newWorld(0, 9.81*64, true) --create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81
+  world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
 
   -- -- barriers
@@ -165,9 +181,14 @@ function love.load()
   interactive_graphics.button_down.x    = 748
   interactive_graphics.button_down.y    = 1088
 
-  bg_music = love.audio.newSource('sounds/soundtrack.mp3', 'stream')
-  bg_music:setLooping( true )
-  bg_music:play()
+  -- sounds
+  sounds = {}
+  sounds.press    = love.audio.newSource("sounds/press.mp3", "static")
+  sounds.collide  = load_colliding_sound()
+  sounds.click    = love.audio.newSource("sounds/click.wav", "static")
+  sounds.bg_music = love.audio.newSource('sounds/soundtrack.mp3', 'stream')
+  sounds.bg_music:setLooping( true )
+  sounds.bg_music:play()
 
 end -- end love.load()
 
@@ -181,9 +202,9 @@ function love.update(dt)
 
   if game_state == 1 then
     -- gradualy increase volume in idle state
-    local curent_bg_volume = bg_music:getVolume()
+    local curent_bg_volume = sounds.bg_music:getVolume()
     if curent_bg_volume < default_bg_music_volume then
-      bg_music:setVolume(curent_bg_volume + .005)
+      sounds.bg_music:setVolume(curent_bg_volume + .005)
     end
     if state_1_timer < state_1_pause_duration then
       state_1_timer = state_1_timer + dt
@@ -241,6 +262,7 @@ function love.update(dt)
           (state_1_timer >= state_1_pause_duration)
         ) then
       button_state = 1
+      sounds.press:play()
       game_state = 2
     end
   else
@@ -309,7 +331,8 @@ function love.draw()
   end
 
   if show_debug_messages then
-    love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+    love.graphics.setColor(0.0, 0.0, 0.0, 1.0)
+    -- love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     love.graphics.print('Game State: ' ..game_state, 50, 50)
     love.graphics.print('Button State: ' ..button_state, 50, 70)
     love.graphics.print('Since Last Pressed: ' ..since_last_pressed, 50, 90)
@@ -318,6 +341,9 @@ function love.draw()
     love.graphics.print('Pong clicked: ' ..(pong_clicked and 'true' or 'false'), 50, 150)
     love.graphics.print('State 1 Timer: ' ..state_1_timer, 50, 170)
     love.graphics.print('State 4 Timer: ' ..state_4_timer, 50, 190)
+    local x, y = pong.body:getLinearVelocity()
+    love.graphics.print('Pong Velocity X: ' ..x, 50, 210)
+    love.graphics.print('Pong Velocity Y: ' ..y, 50, 230)
   end
 
 end -- end love.draw()
@@ -327,6 +353,30 @@ end -- end love.draw()
 
 
 --------------- CUSTOM FUNCTIONS --------------
+function beginContact(a, b, coll)
+  if pong.body:getY() > 1000 then
+
+    local x, y = pong.body:getLinearVelocity()
+    local vol = 1.0
+    if math.abs(x) + math.abs(y) < 500 then
+      vol = .3
+    elseif  math.abs(x) + math.abs(y) < 100 then
+      vol = .1
+    elseif  math.abs(x) + math.abs(y) < 50 then
+      vol = .02
+    end
+
+    for i, s in ipairs(sounds.collide) do
+      if not s:isPlaying() then
+        s:setVolume(vol)
+        s:play()
+        break
+      end
+    end
+  end
+end
+
+
 -- Exit on pressing ESC
 function love.keypressed(k)
   if k == 'escape' then
