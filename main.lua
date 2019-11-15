@@ -34,11 +34,23 @@ function load_colliding_sound()
 end
 
 function determine_prize()
-  local x = love.math.random(0, 99)
-  
-  for k, v in pairs(prize_chance_map) do
-    if (x >= v.min) and (x <= v.max) then
-      prize_key = k
+  rand_x = love.math.random(0, 99)
+  local prize_available = false
+  for i = 1, 1000, 1 do
+    for k, v in pairs(prize_chance_map) do
+      if (rand_x >= v.min) and (rand_x <= v.max) then
+        if prizes[k].qty > 0 then
+          prize_key = k
+          prizes[k].qty = prizes[k].qty - 1
+          prize_available = true
+          break
+        end
+      end
+    end
+    if prize_available then
+      break
+    else
+      rand_x = love.math.random(0, 99)
     end
   end
 end
@@ -84,7 +96,7 @@ function love.load()
   -- DEV VARIABLES
   paint_hidden_structures   = false
   semi_transparent          = false
-  show_debug_messages       = false
+  show_debug_messages       = true
 
   -- CONFIGS
   display                     = 2
@@ -105,6 +117,7 @@ function love.load()
   since_last_pressed  = 0
   pong_kicked         = false
   current_dt          = 0
+  rand_x              = 0
   state_1_timer       = state_1_pause_duration
   prize_key           = 'blue'
 
@@ -313,17 +326,35 @@ function love.draw()
   end
 
   if show_debug_messages then
+    love.graphics.setColor(1.0, 1.0, 1.0, 0.8)
+    love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), 250)
     love.graphics.setColor(0.0, 0.0, 0.0, 1.0)
-    -- love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     love.graphics.print('Game State: ' ..game_state, 50, 50)
     love.graphics.print('Button State: ' ..button_state, 50, 70)
     love.graphics.print('Since Last Pressed: ' ..since_last_pressed, 50, 90)
     love.graphics.print('Pong kicked: ' ..(pong_kicked and 'true' or 'false'), 50, 110)
     love.graphics.print('Current dt: ' ..current_dt, 50, 130)
-    love.graphics.print('State 1 Timer: ' ..state_1_timer, 50, 170)
+    love.graphics.print('State 1 Timer: ' ..state_1_timer, 50, 150)
     local x, y = pong.body:getLinearVelocity()
-    love.graphics.print('Pong Velocity X: ' ..x, 50, 250)
-    love.graphics.print('Pong Velocity Y: ' ..y, 50, 270)
+    love.graphics.print('Pong Velocity X: ' ..x, 50, 170)
+    love.graphics.print('Pong Velocity Y: ' ..y, 50, 190)
+
+
+    love.graphics.print('Qty Blue: ' ..prizes.blue.qty, 350, 50)
+    love.graphics.print('Qty Red: ' ..prizes.red.qty, 350, 70)
+    love.graphics.print('Qty Green: ' ..prizes.green.qty, 350, 90)
+    love.graphics.print('Qty Metallic: ' ..prizes.metallic.qty, 350, 110)
+    love.graphics.print('Qty Gold: ' ..prizes.gold.qty, 350, 130)
+    love.graphics.print('Qty Purple: ' ..prizes.purple.qty, 350, 150)
+
+    love.graphics.print('Chance Blue: ' ..prize_chance_map.blue.min ..' - ' ..prize_chance_map.blue.max , 550, 50)
+    love.graphics.print('Chance Red: ' ..prize_chance_map.red.min ..' - ' ..prize_chance_map.red.max , 550, 70)
+    love.graphics.print('Chance Green: ' ..prize_chance_map.green.min ..' - ' ..prize_chance_map.green.max , 550, 90)
+    love.graphics.print('Chance Metallic: ' ..prize_chance_map.metallic.min ..' - ' ..prize_chance_map.metallic.max , 550, 110)
+    love.graphics.print('Chance Gold: ' ..prize_chance_map.gold.min ..' - ' ..prize_chance_map.gold.max , 550, 130)
+    love.graphics.print('Chance Purple: ' ..prize_chance_map.purple.min ..' - ' ..prize_chance_map.purple.max , 550, 150)
+    love.graphics.print('Rand X: ' ..rand_x, 550, 170)
+
   end
 
 end -- end love.draw()

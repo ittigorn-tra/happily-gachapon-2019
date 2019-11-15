@@ -10,6 +10,13 @@ prizes = {
   purple    = { sound = fail,    img = love.graphics.newImage('sprites/prizes/purple.png'),    name='Nothing'           , chance='else'},
 }
 
+for line in love.filesystem.lines("prizes.txt") do
+	for k, v in line:gmatch("(.-):(.*)") do
+    prizes[k].qty = tonumber(v)
+  end
+end
+
+-- mapping chances
 prize_chance_map = {}
 local cum_chances = -1
 for k, v in pairs(prizes) do
@@ -19,7 +26,10 @@ for k, v in pairs(prizes) do
       max = cum_chances + v.chance,
     }
     cum_chances = cum_chances + v.chance
-  else
+  end
+end
+for k, v in pairs(prizes) do
+  if v.chance == 'else' then
     prize_chance_map[k] = {
       min = cum_chances + 1,
       max = 99,
