@@ -121,6 +121,9 @@ function love.load()
   state_1_timer       = state_1_pause_duration
   prize_key           = 'blue'
 
+  -- SEED RANDOM
+  math.randomseed(os.time())
+
   -- SET WINDOWS RESOLUTION
   love.window.setMode( 1080, 1920, {fullscreen=fullscreen, fullscreentype = "desktop", display=display} )
   screenWidth, screenHeight = love.graphics.getWidth(), love.graphics.getHeight()
@@ -347,12 +350,12 @@ function love.draw()
     love.graphics.print('Qty Gold: ' ..prizes.gold.qty, 350, 130)
     love.graphics.print('Qty Purple: ' ..prizes.purple.qty, 350, 150)
 
-    love.graphics.print('Chance Blue: ' ..prize_chance_map.blue.min ..' - ' ..prize_chance_map.blue.max , 550, 50)
-    love.graphics.print('Chance Red: ' ..prize_chance_map.red.min ..' - ' ..prize_chance_map.red.max , 550, 70)
-    love.graphics.print('Chance Green: ' ..prize_chance_map.green.min ..' - ' ..prize_chance_map.green.max , 550, 90)
-    love.graphics.print('Chance Metallic: ' ..prize_chance_map.metallic.min ..' - ' ..prize_chance_map.metallic.max , 550, 110)
-    love.graphics.print('Chance Gold: ' ..prize_chance_map.gold.min ..' - ' ..prize_chance_map.gold.max , 550, 130)
-    love.graphics.print('Chance Purple: ' ..prize_chance_map.purple.min ..' - ' ..prize_chance_map.purple.max , 550, 150)
+    love.graphics.print('Range Blue: ' ..prize_chance_map.blue.min ..' - ' ..prize_chance_map.blue.max , 550, 50)
+    love.graphics.print('Range Red: ' ..prize_chance_map.red.min ..' - ' ..prize_chance_map.red.max , 550, 70)
+    love.graphics.print('Range Green: ' ..prize_chance_map.green.min ..' - ' ..prize_chance_map.green.max , 550, 90)
+    love.graphics.print('Range Metallic: ' ..prize_chance_map.metallic.min ..' - ' ..prize_chance_map.metallic.max , 550, 110)
+    love.graphics.print('Range Gold: ' ..prize_chance_map.gold.min ..' - ' ..prize_chance_map.gold.max , 550, 130)
+    love.graphics.print('Range Purple: ' ..prize_chance_map.purple.min ..' - ' ..prize_chance_map.purple.max , 550, 150)
     love.graphics.print('Rand X: ' ..rand_x, 550, 170)
 
   end
