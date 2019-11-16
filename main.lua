@@ -122,6 +122,19 @@ function enter_state_4() -- show prize state
   end
 end
 
+function start_state_20_timer()
+  if state_20_timer == 0 then
+    listening_to_state_20_clicks = true
+  end
+end
+
+function enter_state_20() -- show prize state
+  game_state            = 20
+  listening_to_state_20_clicks  = false
+  state_20_click_count  = 0
+  state_20_timer        = 0
+end
+
 function love.load()
 
   -- DEV VARIABLES
@@ -140,19 +153,24 @@ function love.load()
   default_bg_music_volume         = 1.0
   dimmed_bg_music_volume          = 0.4
   state_1_pause_duration          = 0.7 -- pausing time before the button can be clicked again after entering this state
+  state_20_click_detection_duration = 1.5 -- must click n time within x seconds to enter state 20
+  state_20_click_activation       = 3 -- must click n time to enter state 20
   prize_inventory_default_file    = "config/prize_inventory_default.txt"
   prize_inventory_file            = "states/prize_inventory.txt"
 
   -- SET VARIABLES
-  game_state          = 1
-  button_state        = 0
-  ball_circling_state = false
-  since_last_pressed  = 0
-  pong_kicked         = false
-  current_dt          = 0
-  rand_x              = 0
-  state_1_timer       = state_1_pause_duration
-  prize_key           = 'blue'
+  game_state            = 1
+  button_state          = 0
+  ball_circling_state   = false
+  since_last_pressed    = 0
+  pong_kicked           = false
+  current_dt            = 0
+  rand_x                = 0
+  state_1_timer         = state_1_pause_duration
+  listening_to_state_20_clicks = false
+  state_20_timer        = 0
+  state_20_click_count  = 0
+  prize_key             = 'blue'
 
   -- SEED RANDOM
   math.randomseed(os.time())
@@ -282,6 +300,19 @@ function love.update(dt)
     button_state = 0
     ball_circling_state = false
   end
+
+  -- detect state 20 clicks
+  if listening_to_state_20_clicks then
+    state_20_timer = state_20_timer + dt
+    if (state_20_timer >= state_20_click_detection_duration) and (state_20_click_count < state_20_click_activation) then
+      state_20_click_count          = 0
+      state_20_timer                = 0
+      listening_to_state_20_clicks  = false
+    elseif (state_20_click_count >= state_20_click_activation) then
+      enter_state_20()
+    end
+  end
+
 end -- end love.update()
 
 
@@ -394,8 +425,9 @@ function love.draw()
     love.graphics.print('Range Gold: ' ..prize_chance_map.gold.min ..' - ' ..prize_chance_map.gold.max , 550, 130)
     love.graphics.print('Range Purple: ' ..prize_chance_map.purple.min ..' - ' ..prize_chance_map.purple.max , 550, 150)
     love.graphics.print('Rand X: ' ..rand_x, 550, 170)
-    -- love.graphics.print('Success: ' ..(success and 'true' or 'false'), 550, 190)
-    -- love.graphics.print('Message: ' ..message, 550, 210)
+    love.graphics.print('Listening to state 20 clicks: ' ..(listening_to_state_20_clicks and 'true' or 'false'), 550, 190)
+    love.graphics.print('State 20 click count: ' ..state_20_click_count, 550, 210)
+    love.graphics.print('State 20 timer: ' ..state_20_timer, 550, 230)
 
   end
 
@@ -432,6 +464,21 @@ function love.mousepressed( x, y, button, istouch, presses )
   -- detect clicking to close a panel
   elseif (game_state == 4) or (game_state == 10) then
     reset_game_state()
+  -- detect clicking on secret config button
+  -- love.graphics.rectangle('fill', 750, 50, 180, 180)
+
+  elseif  (
+    (x >= 750) and (x <= 750 + 180) 
+    and 
+    (y >= 50) and (y <= 50 + 180) 
+    and 
+    (game_state < 2) 
+    and
+    (state_1_timer >= state_1_pause_duration)
+  ) then
+    play_pressing_sound()
+    start_state_20_timer()
+    state_20_click_count = state_20_click_count + 1
   end
 
 end
