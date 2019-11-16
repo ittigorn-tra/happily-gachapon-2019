@@ -55,13 +55,31 @@ function play_pressing_sound()
   end
 end
 
-function deduct_current_inventory()
+function save_current_inventory()
   local data = ""
-  prizes[prize_key].qty = prizes[prize_key].qty - 1
   for k, v in pairs(prizes) do
     data = data..k..":"..v.qty.."\n"
   end
-  local uccess, message = love.filesystem.write( prize_inventory_file, data )
+  local success, message = love.filesystem.write( prize_inventory_file, data )
+end
+
+function adjust_current_inventory(k, adj)
+  prizes[k].qty = prizes[k].qty + adj
+end
+
+function reload_default_prize_qty()
+  -- read prize inventory from file
+  for line in love.filesystem.lines(prize_inventory_default_file) do
+    for k, v in line:gmatch("(.-):(.*)") do
+      prizes[k].qty = tonumber(v)
+    end
+  end
+  -- write
+  local data = ""
+  for k, v in pairs(prizes) do
+    data = data..k..":"..v.qty.."\n"
+  end
+  local success, message = love.filesystem.write( prize_inventory_file, data )
 end
 
 function determine_prize()
@@ -72,7 +90,8 @@ function determine_prize()
       if (rand_x >= v.min) and (rand_x <= v.max) then
         if prizes[k].qty > 0 then
           prize_key = k
-          deduct_current_inventory()
+          adjust_current_inventory(k, -1)
+          save_current_inventory()
           prize_available = true
           break
         end
@@ -138,9 +157,9 @@ end
 function love.load()
 
   -- DEV VARIABLES
-  paint_hidden_structures   = true
+  paint_hidden_structures   = false
   semi_transparent          = false
-  show_debug_messages       = true
+  show_debug_messages       = false
 
   -- CONFIGS
   display                         = 2
@@ -359,11 +378,56 @@ function love.draw()
     love.graphics.setColor(255,255,255,1)
 
     love.graphics.draw(prizes[prize_key].img, love.graphics.getWidth()/2 - (prizes[prize_key].img:getWidth()/2), love.graphics.getHeight()/2 - (prizes[prize_key].img:getHeight()/2), 0, 1, 1)
+  -- show prize preview state
   elseif game_state == 10 then
     love.graphics.setColor(0,0,0,show_price_fade_percentage)
     love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setColor(255,255,255,1)
     love.graphics.draw(static_graphics.prizes, love.graphics.getWidth()/2 - (static_graphics.prizes:getWidth()/2), love.graphics.getHeight()/2 - (static_graphics.prizes:getHeight()/2), 0, 1, 1)
+  --show config state
+  elseif game_state == 20 then
+    love.graphics.setColor(0,0,0,show_price_fade_percentage)
+    love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    love.graphics.setColor(255,255,255,1)
+
+    -- close button
+    love.graphics.draw(static_graphics.close, (love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 80), 80, 0, 0.2, 0.2)
+
+    -- mute buttons
+    love.graphics.draw((sound_on and static_graphics.mute.off or static_graphics.mute.on), 100, 100, 0, 0.5, 0.5)
+    love.graphics.draw((bg_music_on and static_graphics.mute_music.off or static_graphics.mute_music.on), 300, 100, 0, 0.5, 0.5)
+
+    -- reload button
+    love.graphics.draw(static_graphics.reload, 500, 100, 0, 0.5, 0.5)
+
+    -- balls
+    local config_ball_offset = 0
+    love.graphics.draw(pong.img.blue,     (love.graphics.getWidth()/2) + config_ball_offset - (pong.img.gold:getWidth()/2), love.graphics.getHeight()/2 - 600, 0, 1, 1)
+    love.graphics.draw(pong.img.red,      (love.graphics.getWidth()/2) + config_ball_offset - (pong.img.gold:getWidth()/2), love.graphics.getHeight()/2 - 360, 0, 1, 1)
+    love.graphics.draw(pong.img.green,    (love.graphics.getWidth()/2) + config_ball_offset - (pong.img.gold:getWidth()/2), love.graphics.getHeight()/2 - 120, 0, 1, 1)
+    love.graphics.draw(pong.img.metallic, (love.graphics.getWidth()/2) + config_ball_offset - (pong.img.gold:getWidth()/2), love.graphics.getHeight()/2 + 120, 0, 1, 1)
+    love.graphics.draw(pong.img.gold,     (love.graphics.getWidth()/2) + config_ball_offset - (pong.img.gold:getWidth()/2), love.graphics.getHeight()/2 + 360, 0, 1, 1)
+    love.graphics.draw(pong.img.purple,   (love.graphics.getWidth()/2) + config_ball_offset - (pong.img.gold:getWidth()/2), love.graphics.getHeight()/2 + 600, 0, 1, 1)
+
+    -- ball qty
+    local ball_qty_offset_x = 200
+    local ball_qty_offset_y = 90
+    love.graphics.setNewFont(36)
+    love.graphics.print("Blue : "..prizes.blue.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 600 + ball_qty_offset_y)
+    love.graphics.print("Red : "..prizes.red.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 360 + ball_qty_offset_y)
+    love.graphics.print("Green : "..prizes.green.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 120 + ball_qty_offset_y)
+    love.graphics.print("Metallic : "..prizes.metallic.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 120 + ball_qty_offset_y)
+    love.graphics.print("Gold : "..prizes.gold.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 360 + ball_qty_offset_y)
+    love.graphics.print("Purple : "..prizes.purple.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 600 + ball_qty_offset_y)
+
+    -- plus buttons
+    local plus_button_offset_x = -420
+    local minus_button_offset_x = -280
+    local plus_minus_button_offset_y = 150*0.4
+    for i = -600, 600, 240 do
+      love.graphics.draw(static_graphics.plus, (love.graphics.getWidth()/2) + plus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
+      love.graphics.draw(static_graphics.minus, (love.graphics.getWidth()/2) + minus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
+    end
   end
 
 
@@ -428,7 +492,6 @@ function love.draw()
     love.graphics.print('Listening to state 20 clicks: ' ..(listening_to_state_20_clicks and 'true' or 'false'), 550, 190)
     love.graphics.print('State 20 click count: ' ..state_20_click_count, 550, 210)
     love.graphics.print('State 20 timer: ' ..state_20_timer, 550, 230)
-
   end
 
 end -- end love.draw()
@@ -465,8 +528,6 @@ function love.mousepressed( x, y, button, istouch, presses )
   elseif (game_state == 4) or (game_state == 10) then
     reset_game_state()
   -- detect clicking on secret config button
-  -- love.graphics.rectangle('fill', 750, 50, 180, 180)
-
   elseif  (
     (x >= 750) and (x <= 750 + 180) 
     and 
@@ -479,6 +540,77 @@ function love.mousepressed( x, y, button, istouch, presses )
     play_pressing_sound()
     start_state_20_timer()
     state_20_click_count = state_20_click_count + 1
+
+  -- clicking in config mode
+  elseif game_state == 20 then
+    -- close
+    -- love.graphics.draw(static_graphics.close, (love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 40), 40, 0, 0.2, 0.2)
+    if (
+      (x >= love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 80) and (x <= (love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 80) + (static_graphics.close:getWidth()*0.2)) 
+      and 
+      (y >= 80) and (y <= 80 + (static_graphics.close:getHeight()*0.2))
+    ) then
+      save_current_inventory()
+      reset_game_state()
+    -- sound off
+    elseif (
+      (x >= 100) and (x <= 100 + (static_graphics.mute.off:getWidth()*0.5)) 
+      and 
+      (y >= 100) and (y <= 100 + (static_graphics.mute.off:getHeight()*0.5)) 
+    ) then
+      sound_on = not sound_on
+      play_pressing_sound()
+      if sounds.bg_music:isPlaying() and not sound_on then
+        sounds.bg_music:stop()
+      elseif sound_on and bg_music_on and not sounds.bg_music:isPlaying() then
+        sounds.bg_music:play()
+      end
+    -- music off
+    elseif (
+      (x >= 300) and (x <= 300 + (static_graphics.mute_music.off:getWidth()*0.5)) 
+      and 
+      (y >= 100) and (y <= 100 + (static_graphics.mute_music.off:getHeight()*0.5)) 
+    ) then
+      bg_music_on = not bg_music_on
+      play_pressing_sound()
+      if sounds.bg_music:isPlaying() and (not sound_on or not bg_music_on) then
+        sounds.bg_music:stop()
+      elseif sound_on and bg_music_on and not sounds.bg_music:isPlaying() then
+        sounds.bg_music:play()
+      end
+    -- relaod
+    elseif (
+      (x >= 500) and (x <= 500 + (static_graphics.reload:getWidth()*0.5)) 
+      and 
+      (y >= 100) and (y <= 100 + (static_graphics.reload:getHeight()*0.5)) 
+    ) then
+      play_pressing_sound()
+      reload_default_prize_qty()
+
+
+
+
+
+
+
+
+
+      -- for i = -600, 600, 240 do
+      --   love.graphics.draw(static_graphics.plus, (love.graphics.getWidth()/2) + plus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
+      --   love.graphics.draw(static_graphics.minus, (love.graphics.getWidth()/2) + minus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
+      -- end
+
+
+
+
+
+
+
+
+
+
+
+    end
   end
 
 end
