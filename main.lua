@@ -64,7 +64,9 @@ function save_current_inventory()
 end
 
 function adjust_current_inventory(k, adj)
-  prizes[k].qty = prizes[k].qty + adj
+  if (prizes[k].qty + adj) >= 0 then
+    prizes[k].qty = prizes[k].qty + adj
+  end
 end
 
 function reload_default_prize_qty()
@@ -176,6 +178,9 @@ function love.load()
   state_20_click_activation       = 3 -- must click n time to enter state 20
   prize_inventory_default_file    = "config/prize_inventory_default.txt"
   prize_inventory_file            = "states/prize_inventory.txt"
+  plus_button_offset_x            = -420
+  minus_button_offset_x           = -280
+  plus_minus_button_offset_y      = 150*0.4
 
   -- SET VARIABLES
   game_state            = 1
@@ -412,18 +417,15 @@ function love.draw()
     -- ball qty
     local ball_qty_offset_x = 200
     local ball_qty_offset_y = 90
-    love.graphics.setNewFont(36)
-    love.graphics.print("Blue : "..prizes.blue.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 600 + ball_qty_offset_y)
-    love.graphics.print("Red : "..prizes.red.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 360 + ball_qty_offset_y)
-    love.graphics.print("Green : "..prizes.green.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 120 + ball_qty_offset_y)
-    love.graphics.print("Metallic : "..prizes.metallic.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 120 + ball_qty_offset_y)
-    love.graphics.print("Gold : "..prizes.gold.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 360 + ball_qty_offset_y)
-    love.graphics.print("Purple : "..prizes.purple.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 600 + ball_qty_offset_y)
+    love.graphics.setNewFont(42)
+    love.graphics.print(prizes.blue.qty,    (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 600 + ball_qty_offset_y)
+    love.graphics.print(prizes.red.qty,     (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 360 + ball_qty_offset_y)
+    love.graphics.print(prizes.green.qty,   (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) - 120 + ball_qty_offset_y)
+    love.graphics.print(prizes.metallic.qty, (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 120 + ball_qty_offset_y)
+    love.graphics.print(prizes.gold.qty,    (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 360 + ball_qty_offset_y)
+    love.graphics.print(prizes.purple.qty,  (love.graphics.getWidth()/2) + ball_qty_offset_x, (love.graphics.getHeight()/2) + 600 + ball_qty_offset_y)
 
     -- plus buttons
-    local plus_button_offset_x = -420
-    local minus_button_offset_x = -280
-    local plus_minus_button_offset_y = 150*0.4
     for i = -600, 600, 240 do
       love.graphics.draw(static_graphics.plus, (love.graphics.getWidth()/2) + plus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
       love.graphics.draw(static_graphics.minus, (love.graphics.getWidth()/2) + minus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
@@ -600,15 +602,104 @@ function love.mousepressed( x, y, button, istouch, presses )
       --   love.graphics.draw(static_graphics.minus, (love.graphics.getWidth()/2) + minus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
       -- end
 
+    -- plus button blue
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + -600) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + -600) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('blue', 1)
+    -- plus button red
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + -360) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + -360) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('red', 1)
+    -- plus button green
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + -120) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + -120) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('green', 1)
+    -- plus button metallic
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + 120) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + 120) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('metallic', 1)
+    -- plus button gold
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + 360) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + 360) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('gold', 1)
+    -- plus button purple
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + 600) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + 600) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('purple', 1)
 
 
-
-
-
-
-
-
-
+    -- minus button blue
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + minus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + minus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + -600) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + -600) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('blue', -1)
+    -- minus button red
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + minus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + minus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + -360) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + -360) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('red', -1)
+    -- minus button green
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + minus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + minus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + -120) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + -120) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('green', -1)
+    -- minus button metallic
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + minus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + minus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + 120) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + 120) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('metallic', -1)
+    -- minus button gold
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + minus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + minus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + 360) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + 360) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('gold', -1)
+    -- minus button purple
+    elseif (
+      (x >= (love.graphics.getWidth()/2) + minus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + minus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
+      and 
+      (y >= (love.graphics.getHeight()/2 + 600) + plus_minus_button_offset_y) and (y <= (love.graphics.getHeight()/2 + 600) + plus_minus_button_offset_y + (static_graphics.plus:getHeight()*0.6)) 
+    ) then
+      play_pressing_sound()
+      adjust_current_inventory('purple', -1)
 
     end
   end
