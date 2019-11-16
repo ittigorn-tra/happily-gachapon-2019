@@ -10,7 +10,8 @@ prizes = {
   purple    = { sound = fail,    img = love.graphics.newImage('sprites/prizes/purple.png'),    name='Nothing'           , chance='else'},
 }
 
-for line in love.filesystem.lines("prizes.txt") do
+-- read prize inventory from file
+for line in love.filesystem.lines(prize_inventory_file) do
 	for k, v in line:gmatch("(.-):(.*)") do
     prizes[k].qty = tonumber(v)
   end

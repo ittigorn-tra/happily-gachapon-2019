@@ -1,0 +1,6 @@
+blue:3
+red:3
+green:3
+metallic:3
+gold:3
+purple:10000

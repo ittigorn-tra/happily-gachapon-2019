@@ -33,6 +33,15 @@ function load_colliding_sound()
   end
 end
 
+function deduct_current_inventory()
+  local data = ""
+  prizes[prize_key].qty = prizes[prize_key].qty - 1
+  for k, v in pairs(prizes) do
+    data = data..k..":"..v.qty.."\n"
+  end
+  local uccess, message = love.filesystem.write( prize_inventory_file, data )
+end
+
 function determine_prize()
   rand_x = love.math.random(0, 99)
   local prize_available = false
@@ -41,7 +50,7 @@ function determine_prize()
       if (rand_x >= v.min) and (rand_x <= v.max) then
         if prizes[k].qty > 0 then
           prize_key = k
-          prizes[k].qty = prizes[k].qty - 1
+          deduct_current_inventory()
           prize_available = true
           break
         end
@@ -73,7 +82,7 @@ function enter_state_2(dt) -- determining prize and drop ball state
   since_last_pressed = since_last_pressed + dt
   if (not pong_kicked) and (since_last_pressed > (state_2_duration/2)) then
     determine_prize()
-    pong.body:setLinearVelocity(love.math.random( 800, 2000 ), love.math.random( -10, -100 ))
+    pong.body:setLinearVelocity(love.math.random( 800, 2000 ), love.math.random( -10, -20 ))
     pong_kicked = true
   end
 end
@@ -99,16 +108,18 @@ function love.load()
   show_debug_messages       = true
 
   -- CONFIGS
-  display                     = 2
-  fullscreen                  = true
-  forceWidth, forceHeight     = 1080, 1920
-  sound_on                    = true
-  bg_music_on                 = true
-  state_2_duration            = 2.0
-  show_price_fade_percentage  = 0.7
-  default_bg_music_volume     = 1.0
-  dimmed_bg_music_volume      = 0.4
-  state_1_pause_duration      = 0.7 -- pausing time before the button can be clicked again after entering this state
+  display                         = 2
+  fullscreen                      = true
+  forceWidth, forceHeight         = 1080, 1920
+  sound_on                        = true
+  bg_music_on                     = true
+  state_2_duration                = 2.0
+  show_price_fade_percentage      = 0.7
+  default_bg_music_volume         = 1.0
+  dimmed_bg_music_volume          = 0.4
+  state_1_pause_duration          = 0.7 -- pausing time before the button can be clicked again after entering this state
+  prize_inventory_default_file    = "config/prize_inventory_default.txt"
+  prize_inventory_file            = "states/prize_inventory.txt"
 
   -- SET VARIABLES
   game_state          = 1
@@ -357,6 +368,8 @@ function love.draw()
     love.graphics.print('Range Gold: ' ..prize_chance_map.gold.min ..' - ' ..prize_chance_map.gold.max , 550, 130)
     love.graphics.print('Range Purple: ' ..prize_chance_map.purple.min ..' - ' ..prize_chance_map.purple.max , 550, 150)
     love.graphics.print('Rand X: ' ..rand_x, 550, 170)
+    -- love.graphics.print('Success: ' ..(success and 'true' or 'false'), 550, 190)
+    -- love.graphics.print('Message: ' ..message, 550, 210)
 
   end
 
