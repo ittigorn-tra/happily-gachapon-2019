@@ -33,6 +33,28 @@ function load_colliding_sound()
   end
 end
 
+function load_pressing_sound()
+  if sound_on then
+    local sound_arr = {}
+    table.insert(sound_arr, love.audio.newSource("sounds/press.mp3", "static"))
+    for i = 1, 20, 1 do
+      table.insert(sound_arr, sound_arr[1]:clone())
+    end
+    return sound_arr
+  end
+end
+
+function play_pressing_sound()
+  if sound_on then
+    for i, s in ipairs(sounds.press) do
+      if not s:isPlaying() then
+        s:play()
+        break
+      end
+    end
+  end
+end
+
 function deduct_current_inventory()
   local data = ""
   prizes[prize_key].qty = prizes[prize_key].qty - 1
@@ -65,7 +87,7 @@ function determine_prize()
 end
 
 function reset_game_state() -- return to default state
-  sounds.press:play()
+  play_pressing_sound()
   game_state          = 1
   since_last_pressed  = 0
   pong_kicked         = false
@@ -103,7 +125,7 @@ end
 function love.load()
 
   -- DEV VARIABLES
-  paint_hidden_structures   = false
+  paint_hidden_structures   = true
   semi_transparent          = false
   show_debug_messages       = true
 
@@ -185,7 +207,7 @@ function love.load()
   -- sounds
   if sound_on then
     sounds = {}
-    sounds.press    = love.audio.newSource("sounds/press.mp3", "static")
+    sounds.press    = load_pressing_sound()
     sounds.collide  = load_colliding_sound()
     sounds.click    = love.audio.newSource("sounds/click.wav", "static")
     sounds.bg_music = love.audio.newSource('sounds/soundtrack.mp3', 'stream')
@@ -251,9 +273,7 @@ function love.update(dt)
           (state_1_timer >= state_1_pause_duration)
         ) then
       button_state = 1
-      if sound_on then
-        sounds.press:play()
-      end
+      play_pressing_sound()
       game_state = 2
     elseif  ((x >= 100) and (x <= 100 + 500) and (y >= 500) and (y <= 500 + 830) and (game_state < 2) and (state_1_timer >= state_1_pause_duration)) then
       ball_circling_state = true
@@ -339,6 +359,12 @@ function love.draw()
     love.graphics.rectangle('fill', 100, 500, 500, 830)
   end
 
+  -- show secret config touch area
+  if paint_hidden_structures then
+    love.graphics.setColor(0.0,0.0,1.0,.3)
+    love.graphics.rectangle('fill', 750, 50, 180, 180)
+  end
+
   if show_debug_messages then
     love.graphics.setColor(1.0, 1.0, 1.0, 0.8)
     love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), 250)
@@ -391,10 +417,7 @@ function love.mousepressed( x, y, button, istouch, presses )
     and
     (state_1_timer >= state_1_pause_duration)
   ) then
-
-    if sound_on then
-      sounds.press:play()
-    end
+    play_pressing_sound()
     game_state = 10
     state_1_timer = 0
   -- detect clicking on pong
@@ -438,7 +461,6 @@ function beginContact(a, b, coll)
 
   end
 end
-
 
 -- Exit on pressing ESC
 function love.keypressed(k)
