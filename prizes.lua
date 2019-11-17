@@ -10,12 +10,8 @@ prizes = {
   purple    = { sound = fail,    img = love.graphics.newImage('sprites/prizes/purple.png'),    name='Nothing'           , chance='else'},
 }
 
--- read prize inventory from file
-for line in love.filesystem.lines(prize_inventory_file) do
-	for k, v in line:gmatch("(.-):(.*)") do
-    prizes[k].qty = tonumber(v)
-  end
-end
+load_inventory_from_saved_file()
+save_current_inventory()
 
 -- mapping chances
 prize_chance_map = {}

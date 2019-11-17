@@ -69,6 +69,19 @@ function adjust_current_inventory(k, adj)
   end
 end
 
+function load_inventory_from_saved_file()
+  -- read prize inventory from file
+  if love.filesystem.exists( prize_inventory_file ) then
+    for line in love.filesystem.lines( prize_inventory_file ) do
+      for k, v in line:gmatch("(.-):(.*)") do
+        prizes[k].qty = tonumber(v)
+      end
+    end
+  else
+    reload_default_prize_qty()
+  end
+end
+
 function reload_default_prize_qty()
   -- read prize inventory from file
   for line in love.filesystem.lines(prize_inventory_default_file) do
@@ -76,12 +89,6 @@ function reload_default_prize_qty()
       prizes[k].qty = tonumber(v)
     end
   end
-  -- write
-  local data = ""
-  for k, v in pairs(prizes) do
-    data = data..k..":"..v.qty.."\n"
-  end
-  local success, message = love.filesystem.write( prize_inventory_file, data )
 end
 
 function determine_prize()
@@ -177,7 +184,7 @@ function love.load()
   state_20_click_detection_duration = 1.5 -- must click n time within x seconds to enter state 20
   state_20_click_activation       = 3 -- must click n time to enter state 20
   prize_inventory_default_file    = "config/prize_inventory_default.txt"
-  prize_inventory_file            = "states/prize_inventory.txt"
+  prize_inventory_file            = "prize_inventory.txt"
   plus_button_offset_x            = -420
   minus_button_offset_x           = -280
   plus_minus_button_offset_y      = 150*0.4
