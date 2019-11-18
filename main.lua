@@ -71,11 +71,12 @@ function love.load()
 
   -- sounds
   if sound_on then
-    sounds = {}
-    sounds.press    = load_pressing_sound()
-    sounds.collide  = load_colliding_sound()
-    sounds.click    = love.audio.newSource("sounds/click.wav", "static")
-    sounds.bg_music = love.audio.newSource('sounds/soundtrack.mp3', 'stream')
+    sounds                = {}
+    sounds.press          = load_pressing_sound()
+    sounds.collide        = load_colliding_sound()
+    sounds.click          = love.audio.newSource("sounds/click.wav", "static")
+    sounds.bg_music       = love.audio.newSource('sounds/soundtrack.mp3', 'stream')
+    sounds.balls_rolling  = love.audio.newSource('sounds/balls_rolling.mp3', 'stream')
     if bg_music_on then
       sounds.bg_music:setLooping( true )
       sounds.bg_music:play()
@@ -141,6 +142,7 @@ function love.update(dt)
         ) then
       button_state = 1
       play_pressing_sound()
+      sounds.balls_rolling:play()
       game_state = 2
     elseif  ((x >= 100) and (x <= 100 + 500) and (y >= 500) and (y <= 500 + 830) and (game_state < 2) and (state_1_timer >= state_1_pause_duration)) then
       ball_circling_state = true
@@ -674,6 +676,7 @@ function determine_prize()
 end
 
 function reset_game_state() -- return to default state
+  if prizes[prize_key].sound:isPlaying() then prizes[prize_key].sound:stop() end
   play_pressing_sound()
   game_state          = 1
   since_last_pressed  = 0

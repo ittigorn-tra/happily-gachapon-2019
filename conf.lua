@@ -11,8 +11,8 @@ sound_on                        = true
 bg_music_on                     = true
 state_2_duration                = 2.0
 show_price_fade_percentage      = 0.7
-default_bg_music_volume         = 1.0
-dimmed_bg_music_volume          = 0.4
+default_bg_music_volume         = 0.8
+dimmed_bg_music_volume          = 0.2
 state_1_pause_duration          = 0.7 -- pausing time before the button can be clicked again after entering this state
 state_20_click_detection_duration = 1.5 -- must click n time within x seconds to enter state 20
 state_20_click_activation       = 3 -- must click n time to enter state 20
@@ -39,6 +39,8 @@ star = {
 --   fade_speed    = 1000, -- the lower the faster they fade IN
 --   max           = 40,
 --   min_scale     = 0.0
+--   origin_x_offset      = 0,
+--   origin_y_offset      = 0,
 -- }
 
 prize_chances = {
