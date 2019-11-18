@@ -21,6 +21,26 @@ plus_button_offset_x            = -420
 minus_button_offset_x           = -280
 plus_minus_button_offset_y      = 150*0.4
 
+show_stars      = true
+star = {
+  speed         = 1000,
+  rotate_speed  = 1.5,
+  scale_speed   = 1500, -- the lower the faster they scale UP
+  fade_speed    = 1000, -- the lower the faster they fade IN
+  max           = 40,
+  min_scale     = 0.0
+}
+
+-- show_flies      = true
+-- fly = {
+--   speed         = 1000,
+--   rotate_speed  = 1.5,
+--   scale_speed   = 1500, -- the lower the faster they scale UP
+--   fade_speed    = 1000, -- the lower the faster they fade IN
+--   max           = 40,
+--   min_scale     = 0.0
+-- }
+
 prize_chances = {
   blue      = 15.0,   -- S Sketchbook 2018
   red       = 15.0,   -- S Sketchbook 2020
@@ -31,10 +51,10 @@ prize_chances = {
 }
 
 prize_inventory_default = {
-  blue      = 3,    -- S Sketchbook 2018
-  red       = 3,    -- S Sketchbook 2020
-  green     = 3,    -- L Sketchbook 2018
-  metallic  = 3,    -- L Sketchbook 2020
-  gold      = 1,    -- T-Shirt
+  blue      = 30,    -- S Sketchbook 2018
+  red       = 165,    -- S Sketchbook 2020
+  green     = 15,    -- L Sketchbook 2018
+  metallic  = 50,    -- L Sketchbook 2020
+  gold      = 11,    -- T-Shirt
   purple    = 10000 -- Nothing
 }

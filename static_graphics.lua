@@ -14,3 +14,4 @@ static_graphics.mute_music.off  = love.graphics.newImage('sprites/static_graphic
 static_graphics.reload          = love.graphics.newImage('sprites/static_graphics/reload.png')
 static_graphics.plus            = love.graphics.newImage('sprites/static_graphics/plus.png')
 static_graphics.minus           = love.graphics.newImage('sprites/static_graphics/minus.png')
+static_graphics.star            = love.graphics.newImage('sprites/static_graphics/star.png')

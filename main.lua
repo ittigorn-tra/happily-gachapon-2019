@@ -20,6 +20,7 @@ function love.load()
   state_20_timer        = 0
   state_20_click_count  = 0
   prize_key             = 'blue'
+  stars                 = {}
 
   -- SET WINDOWS RESOLUTION
   love.window.setMode( 1080, 1920, {fullscreen=fullscreen, fullscreentype = "desktop", display=display} )
@@ -109,6 +110,8 @@ function love.update(dt)
     if since_last_pressed >= state_2_duration then
       enter_state_3()
     end
+  elseif game_state == 4 then
+    update_stars(dt)
   end
 
   -- ANIMATION
@@ -204,6 +207,15 @@ function love.draw()
     love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setColor(255,255,255,1)
 
+    -- draw stars
+    if show_stars and (prize_key ~= "purple") then
+      for i,v in ipairs(stars) do
+        love.graphics.setColor(255,255,255,v.a)
+        love.graphics.draw(static_graphics.star, v.x, v.y, v.r, v.s, v.s, ((static_graphics.star:getWidth() * v.s) / 2), ((static_graphics.star:getHeight() * v.s) / 2))
+      end
+    end
+
+    love.graphics.setColor(255,255,255,1)
     love.graphics.draw(prizes[prize_key].img, love.graphics.getWidth()/2 - (prizes[prize_key].img:getWidth()/2), love.graphics.getHeight()/2 - (prizes[prize_key].img:getHeight()/2), 0, 1, 1)
   -- show prize preview state
   elseif game_state == 10 then
@@ -298,7 +310,6 @@ function love.draw()
     love.graphics.print('Pong Velocity X: ' ..x, 50, 170)
     love.graphics.print('Pong Velocity Y: ' ..y, 50, 190)
 
-
     love.graphics.print('Qty Blue: ' ..prizes.blue.qty, 350, 50)
     love.graphics.print('Qty Red: ' ..prizes.red.qty, 350, 70)
     love.graphics.print('Qty Green: ' ..prizes.green.qty, 350, 90)
@@ -313,9 +324,9 @@ function love.draw()
     love.graphics.print('Range Gold: ' ..prize_chance_map.gold.min ..' - ' ..prize_chance_map.gold.max , 550, 130)
     love.graphics.print('Range Purple: ' ..prize_chance_map.purple.min ..' - ' ..prize_chance_map.purple.max , 550, 150)
     love.graphics.print('Rand X: ' ..rand_x, 550, 170)
-    love.graphics.print('Listening to state 20 clicks: ' ..(listening_to_state_20_clicks and 'true' or 'false'), 550, 190)
-    love.graphics.print('State 20 click count: ' ..state_20_click_count, 550, 210)
-    love.graphics.print('State 20 timer: ' ..state_20_timer, 550, 230)
+    -- love.graphics.print('Listening to state 20 clicks: ' ..(listening_to_state_20_clicks and 'true' or 'false'), 550, 190)
+    -- love.graphics.print('State 20 click count: ' ..state_20_click_count, 550, 210)
+    -- love.graphics.print('State 20 timer: ' ..state_20_timer, 550, 230)
   end
 
 end -- end love.draw()
@@ -368,7 +379,6 @@ function love.mousepressed( x, y, button, istouch, presses )
   -- clicking in config mode
   elseif game_state == 20 then
     -- close
-    -- love.graphics.draw(static_graphics.close, (love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 40), 40, 0, 0.2, 0.2)
     if (
       (x >= love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 80) and (x <= (love.graphics.getWidth() - (static_graphics.close:getWidth() * 0.2) - 80) + (static_graphics.close:getWidth()*0.2)) 
       and 
@@ -410,20 +420,6 @@ function love.mousepressed( x, y, button, istouch, presses )
     ) then
       play_pressing_sound()
       reload_default_prize_qty()
-
-
-
-
-
-
-
-
-
-      -- for i = -600, 600, 240 do
-      --   love.graphics.draw(static_graphics.plus, (love.graphics.getWidth()/2) + plus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
-      --   love.graphics.draw(static_graphics.minus, (love.graphics.getWidth()/2) + minus_button_offset_x, (love.graphics.getHeight()/2 + i) + plus_minus_button_offset_y, 0, 0.6, 0.6)
-      -- end
-
     -- plus button blue
     elseif (
       (x >= (love.graphics.getWidth()/2) + plus_button_offset_x) and (x <= (love.graphics.getWidth()/2) + plus_button_offset_x + (static_graphics.plus:getWidth()*0.6)) 
@@ -557,15 +553,15 @@ end
 -- Exit on pressing ESC
 function love.keypressed(k)
   if k == 'escape' then
-     love.event.quit()
-  -- elseif k == 'home' and game_state == 2 then
-    -- enterIdleState()
+    if (game_state == 4) or (game_state == 10) or (game_state == 20) then
+      reset_game_state()
+    else
+      love.event.quit()
+    end
+  elseif k == 'home' and game_state == 1 then
+    enter_state_20()
   end
 end
-
--- function radToDeg(rad)
---   return rad * (180/math.pi)
--- end
 
 function newAnimation(image, width, height, duration, frames)
   local animation = {}
@@ -637,7 +633,7 @@ end
 
 function load_inventory_from_saved_file()
   -- read prize inventory from file
-  if love.filesystem.exists( prize_inventory_file ) then
+  if love.filesystem.getInfo( prize_inventory_file, nil ) then
     for line in love.filesystem.lines( prize_inventory_file ) do
       for k, v in line:gmatch("(.-):(.*)") do
         prizes[k].qty = tonumber(v)
@@ -724,4 +720,51 @@ function enter_state_20() -- show prize state
   listening_to_state_20_clicks  = false
   state_20_click_count  = 0
   state_20_timer        = 0
+end
+
+function calc_distance ( x1, y1, x2, y2 )
+  local dx = x1 - x2
+  local dy = y1 - y2
+  return math.sqrt ( dx * dx + dy * dy )
+end
+
+function update_stars(dt)
+  if show_stars and (prize_key ~= "purple") then
+    for i,v in ipairs(stars) do
+      v.x = v.x + (v.dx * dt) -- update x
+      v.y = v.y + (v.dy * dt) -- update y
+      v.r = v.r + (star.rotate_speed * dt) -- update r
+      v.s = (calc_distance(v.x, v.y, (love.graphics.getWidth() / 2), (love.graphics.getHeight() / 2)) / star.scale_speed) -- update s
+
+      local a = (calc_distance(v.x, v.y, (love.graphics.getWidth() / 2), (love.graphics.getHeight() / 2)) / star.fade_speed)
+      if a > 1 then a = 1 end
+      v.a = a
+
+      -- check if stars are out of screen, if so, delete them
+      if  (v.x < -(static_graphics.star:getWidth() * v.s )) or 
+          (v.x > (love.graphics.getWidth() + (static_graphics.star:getWidth() * v.s ))) or 
+          (v.y < -(static_graphics.star:getHeight() * v.s )) or 
+          (v.y > (love.graphics.getHeight() + (static_graphics.star:getHeight() * v.s ))) then
+        table.remove( stars, i )
+      end
+    end
+    
+    -- spawn stars
+    if (#stars < star.max) and (math.random(1,100) > 50) then
+      local star_x = (love.graphics.getWidth() / 2)
+      local star_y = (love.graphics.getHeight() / 2)
+      local star_r = 0
+  
+      local angle = math.random(0, 628319) / 100000
+      local rotation = 1
+      local scale = star.min_scale
+  
+      local direction_x = star.speed * math.cos(angle)
+      local direction_y = star.speed * math.sin(angle)
+  
+      table.insert( stars, { x = star_x, y = star_y, dx = direction_x, dy = direction_y, r = rotation, s = scale, a = 0.0 } )
+    end
+
+  end
+
 end
