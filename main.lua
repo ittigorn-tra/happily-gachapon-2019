@@ -786,7 +786,19 @@ function update_flies(dt)
     for i,v in ipairs(flies) do
       v.x = v.x - (v.dx * dt) -- update x
       v.y = v.y - (v.dy * dt) -- update y
-      v.r = v.r + (fly.rotate_speed * dt) -- update r
+
+      if v.r + (fly.rotate_speed * dt) > 1.0472 then
+        v.swing_plus = false
+      elseif v.r + (fly.rotate_speed * dt) < 2.0944 then
+        v.swing_plus = true
+      end
+
+      if v.swing_plus then
+        v.r = v.r + (fly.rotate_speed * dt) -- update r
+      else
+        v.r = v.r - (fly.rotate_speed * dt) -- update r
+      end
+
       v.s = (calc_distance(v.x, v.y, (love.graphics.getWidth() / 2), (love.graphics.getHeight() / 2) + fly.origin_y_offset) / fly.scale_speed) -- update s
 
       local a = (calc_distance(v.x, v.y, (love.graphics.getWidth() / 2), (love.graphics.getHeight() / 2) + fly.origin_y_offset) / fly.fade_speed)
@@ -809,13 +821,13 @@ function update_flies(dt)
       local fly_r = 0
   
       local angle = math.random((1.0472 * 100000), (2.0944 * 100000)) / 100000
-      local rotation = 1
+      local rotation = 0
       local scale = fly.min_scale
   
       local direction_x = fly.speed * math.cos(angle)
       local direction_y = fly.speed * math.sin(angle)
   
-      table.insert( flies, { x = fly_x, y = fly_y, dx = direction_x, dy = direction_y, r = rotation, s = scale, a = 0.0 } )
+      table.insert( flies, { x = fly_x, y = fly_y, dx = direction_x, dy = direction_y, r = rotation, s = scale, a = 0.0, swing_plus = true } )
     end
 
   end
