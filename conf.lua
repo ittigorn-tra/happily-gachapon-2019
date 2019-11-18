@@ -31,24 +31,23 @@ star = {
   min_scale     = 0.0
 }
 
--- show_flies      = true
--- fly = {
---   speed         = 1000,
---   rotate_speed  = 1.5,
---   scale_speed   = 1500, -- the lower the faster they scale UP
---   fade_speed    = 1000, -- the lower the faster they fade IN
---   max           = 40,
---   min_scale     = 0.0
---   origin_x_offset      = 0,
---   origin_y_offset      = 0,
--- }
+show_flies          = true
+fly = {
+  speed             = 700,
+  rotate_speed      = 10,
+  scale_speed       = 1500, -- the lower the faster they scale UP
+  fade_speed        = 1000, -- the lower the faster they fade IN
+  max               = 10,
+  min_scale         = 0.0,
+  origin_y_offset   = 300
+}
 
 prize_chances = {
-  blue      = 15.0,   -- S Sketchbook 2018
-  red       = 15.0,   -- S Sketchbook 2020
-  green     = 10.0,   -- L Sketchbook 2018
-  metallic  = 10.0,   -- L Sketchbook 2020
-  gold      = 2.0,    -- T-Shirt
+  blue      = 9.0,   -- S Sketchbook 2018
+  red       = 49.0,   -- S Sketchbook 2020
+  green     = 4.0,   -- L Sketchbook 2018
+  metallic  = 15.0,   -- L Sketchbook 2020
+  gold      = 3.0,    -- T-Shirt
   purple    = 'else'  -- Nothing
 }
 

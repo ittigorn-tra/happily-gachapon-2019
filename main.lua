@@ -21,6 +21,7 @@ function love.load()
   state_20_click_count  = 0
   prize_key             = 'blue'
   stars                 = {}
+  flies                 = {}
 
   -- SET WINDOWS RESOLUTION
   love.window.setMode( 1080, 1920, {fullscreen=fullscreen, fullscreentype = "desktop", display=display} )
@@ -111,8 +112,9 @@ function love.update(dt)
     if since_last_pressed >= state_2_duration then
       enter_state_3()
     end
-  elseif game_state == 4 then
+  elseif (game_state > 1) and (game_state <= 4) then
     update_stars(dt)
+    update_flies(dt)
   end
 
   -- ANIMATION
@@ -186,7 +188,7 @@ function love.draw()
   end
 
   local spriteNum = math.floor(animated_graphics.balls.currentTime / animated_graphics.balls.duration * #animated_graphics.balls.quads) + 1
-  love.graphics.draw(animated_graphics.balls.spriteSheet, animated_graphics.balls.quads[spriteNum], 60, 450, 0, 1, 1)
+  love.graphics.draw(animated_graphics.balls.spriteSheet, animated_graphics.balls.quads[spriteNum], 70, 435, 0, 1, 1)
 
   love.graphics.draw(static_graphics.fg, 0, 0, 0, love.graphics.getWidth()/static_graphics.fg:getWidth(), love.graphics.getHeight()/static_graphics.fg:getHeight())
   -- preview
@@ -214,6 +216,12 @@ function love.draw()
       for i,v in ipairs(stars) do
         love.graphics.setColor(255,255,255,v.a)
         love.graphics.draw(static_graphics.star, v.x, v.y, v.r, v.s, v.s, ((static_graphics.star:getWidth() * v.s) / 2), ((static_graphics.star:getHeight() * v.s) / 2))
+      end
+      -- draw flies
+    else
+      for i,v in ipairs(flies) do
+        love.graphics.setColor(255,255,255,v.a)
+        love.graphics.draw(static_graphics.fly, v.x, v.y, v.r, v.s, v.s, 50, 50)
       end
     end
 
@@ -299,6 +307,7 @@ function love.draw()
   end
 
   if show_debug_messages then
+    love.graphics.setNewFont(12)
     love.graphics.setColor(1.0, 1.0, 1.0, 0.8)
     love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), 250)
     love.graphics.setColor(0.0, 0.0, 0.0, 1.0)
@@ -766,6 +775,47 @@ function update_stars(dt)
       local direction_y = star.speed * math.sin(angle)
   
       table.insert( stars, { x = star_x, y = star_y, dx = direction_x, dy = direction_y, r = rotation, s = scale, a = 0.0 } )
+    end
+
+  end
+
+end
+
+function update_flies(dt)
+  if show_flies and (prize_key == "purple") then
+    for i,v in ipairs(flies) do
+      v.x = v.x - (v.dx * dt) -- update x
+      v.y = v.y - (v.dy * dt) -- update y
+      v.r = v.r + (fly.rotate_speed * dt) -- update r
+      v.s = (calc_distance(v.x, v.y, (love.graphics.getWidth() / 2), (love.graphics.getHeight() / 2) + fly.origin_y_offset) / fly.scale_speed) -- update s
+
+      local a = (calc_distance(v.x, v.y, (love.graphics.getWidth() / 2), (love.graphics.getHeight() / 2) + fly.origin_y_offset) / fly.fade_speed)
+      if a > 1 then a = 1 end
+      v.a = a
+
+      -- check if flies are out of screen, if so, delete them
+      if  (v.x < -(static_graphics.fly:getWidth() * v.s )) or 
+          (v.x > (love.graphics.getWidth() + (static_graphics.fly:getWidth() * v.s ))) or 
+          (v.y < -(static_graphics.fly:getHeight() * v.s )) or 
+          (v.y > (love.graphics.getHeight() + (static_graphics.fly:getHeight() * v.s ))) then
+        table.remove( flies, i )
+      end
+    end
+    
+    -- spawn flies
+    if (#flies < fly.max) and (math.random(1,100) > 75) then
+      local fly_x = (love.graphics.getWidth() / 2)
+      local fly_y = (love.graphics.getHeight() / 2) + fly.origin_y_offset
+      local fly_r = 0
+  
+      local angle = math.random((1.0472 * 100000), (2.0944 * 100000)) / 100000
+      local rotation = 1
+      local scale = fly.min_scale
+  
+      local direction_x = fly.speed * math.cos(angle)
+      local direction_y = fly.speed * math.sin(angle)
+  
+      table.insert( flies, { x = fly_x, y = fly_y, dx = direction_x, dy = direction_y, r = rotation, s = scale, a = 0.0 } )
     end
 
   end
