@@ -212,7 +212,7 @@ function love.draw()
     love.graphics.setColor(255,255,255,1)
 
     -- draw stars
-    if show_stars and (prize_key ~= "purple") then
+    if show_stars and (prizes[prize_key].flying_obj == "star") then
       for i,v in ipairs(stars) do
         love.graphics.setColor(255,255,255,v.a)
         love.graphics.draw(static_graphics.star, v.x, v.y, v.r, v.s, v.s, ((static_graphics.star:getWidth() * v.s) / 2), ((static_graphics.star:getHeight() * v.s) / 2))
@@ -741,7 +741,7 @@ function calc_distance ( x1, y1, x2, y2 )
 end
 
 function update_stars(dt)
-  if show_stars and (prize_key ~= "purple") then
+  if show_stars then
     for i,v in ipairs(stars) do
       v.x = v.x + (v.dx * dt) -- update x
       v.y = v.y + (v.dy * dt) -- update y

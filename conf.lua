@@ -31,7 +31,7 @@ star = {
   min_scale     = 0.0
 }
 
-show_flies          = true
+show_flies          = false
 fly = {
   speed             = 700,
   rotate_speed      = 10,
