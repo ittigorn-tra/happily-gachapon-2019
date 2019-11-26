@@ -48,7 +48,7 @@ prize_chances = {
   green     = 4.0,   -- L Sketchbook 2018
   metallic  = 15.0,   -- L Sketchbook 2020
   gold      = 3.0,    -- T-Shirt
-  purple    = 'else'  -- Nothing
+  purple    = 'else'  -- Candy
 }
 
 prize_inventory_default = {
@@ -57,5 +57,5 @@ prize_inventory_default = {
   green     = 15,    -- L Sketchbook 2018
   metallic  = 50,    -- L Sketchbook 2020
   gold      = 11,    -- T-Shirt
-  purple    = 10000 -- Nothing
+  purple    = 200    -- Candy
 }
