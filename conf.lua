@@ -3,10 +3,14 @@ paint_hidden_structures   = false
 semi_transparent          = false
 show_debug_messages       = false
 
--- CONFIGS
+-- DISPLAY CONFIGS
 display                         = 2
 fullscreen                      = true
-forceWidth, forceHeight         = 1080, 1920
+default_width                   = 1080
+default_height                  = 1920
+default_ratio                   = default_width/default_height
+
+-- CONFIGS
 sound_on                        = true
 bg_music_on                     = true
 state_2_duration                = 2.0
