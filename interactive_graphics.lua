@@ -10,5 +10,5 @@ interactive_graphics.button_down      = {}
 interactive_graphics.button_down.img  = love.graphics.newImage('sprites/interactive_graphics/button_down.png')
 interactive_graphics.button_down.x    = game_area.pos.x.start + (748 * game_area.ratio)
 interactive_graphics.button_down.y    = game_area.pos.x.start + (1088 * game_area.ratio)
-interactive_graphics.button_down.sx     = game_area.ratio
-interactive_graphics.button_down.sy     = game_area.ratio
+interactive_graphics.button_down.sx   = game_area.ratio
+interactive_graphics.button_down.sy   = game_area.ratio

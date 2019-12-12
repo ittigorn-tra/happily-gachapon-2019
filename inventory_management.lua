@@ -1,9 +1,9 @@
-function save_current_inventory()
+function save_current_inventory(conf)
   local data = ""
   for k, v in pairs(prizes) do
     data = data..k..":"..v.qty.."\n"
   end
-  local success, message = love.filesystem.write( prize_inventory_file, data )
+  local success, message = love.filesystem.write( conf.prize_inventory_file, data )
 end
 
 function adjust_current_inventory(k, adj)
@@ -12,10 +12,10 @@ function adjust_current_inventory(k, adj)
   end
 end
 
-function load_inventory_from_saved_file()
+function load_inventory_from_saved_file(conf)
   -- read prize inventory from file
-  if love.filesystem.getInfo( prize_inventory_file, nil ) then
-    for line in love.filesystem.lines( prize_inventory_file ) do
+  if love.filesystem.getInfo( conf.prize_inventory_file, nil ) then
+    for line in love.filesystem.lines( conf.prize_inventory_file ) do
       for k, v in line:gmatch("(.-):(.*)") do
         prizes[k].qty = tonumber(v)
       end

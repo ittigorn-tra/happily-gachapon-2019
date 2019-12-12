@@ -10,11 +10,11 @@ prizes = {
   purple    = { sound = success, img = love.graphics.newImage('sprites/prizes/purple.png'),    name='Candy & Snack'    , flying_obj='star' },
 }
 
-load_inventory_from_saved_file()
-save_current_inventory()
+load_inventory_from_saved_file(conf)
+save_current_inventory(conf)
 
 -- load chances
-for k, v in pairs(prize_chances) do
+for k, v in pairs(conf.prize_chances) do
   prizes[k].chance = v
 end
 

@@ -19,9 +19,9 @@ function love.load()
 
   -- SET WINDOWS RESOLUTION
   love.window.setTitle( 'Happily Gachapon' )
-  love.window.setMode( 0, 0, {fullscreen=fullscreen, fullscreentype = "desktop", display=display} )
-  screen_width, screen_height = love.graphics.getWidth(), love.graphics.getHeight()
-  game_area = calc_game_area(default_width, default_height, default_ratio, screen_width, screen_height)
+  love.window.setMode( 0, 0, {fullscreen=conf.fullscreen, fullscreentype = conf.fullscreentype, display=conf.display} )
+  conf.screen_width, conf.screen_height = love.graphics.getWidth(), love.graphics.getHeight()
+  game_area = calc_game_area(conf.default_width, conf.default_height, conf.default_ratio, conf.screen_width, conf.screen_height)
 
   -- import other modules
   require('./inventory_management')
@@ -30,10 +30,11 @@ function love.load()
   -- require('./pong')
   require('./static_graphics')
   require('./interactive_graphics')
-  -- require('./animated_graphics')
   require('./physics')
 
-  
+  -- animations
+  require('./animated_graphics')
+  require('./pongs_in_window')
 
 
 
@@ -53,20 +54,18 @@ end -- end love.update()
 
 function love.draw()
 
-  -- background
+  -- set solid alpha
   love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 
-  -- bg
-  love.graphics.draw(static_graphics.bg, game_area.pos.x.start, game_area.pos.y.start, 0, game_area.ratio, game_area.ratio)
+  draw_bg(game_area)              -- draw bg
+  draw_pong_in_window(game_area)  -- pongs in window
+  draw_fg(game_area, conf)        -- draw fg
 
   -- pong
   -- love.graphics.draw(pong.img[prize_key], pong.body:getX(), pong.body:getY(), pong.body:getAngle(), nil, nil, pong.img[prize_key]:getWidth()/2, pong.img[prize_key]:getWidth()/2)
 
-  -- fg
-  if semi_transparent then
-    love.graphics.setColor(1.0, 1.0, 1.0, 0.3)
-  end
-  love.graphics.draw(static_graphics.fg, game_area.pos.x.start, game_area.pos.y.start, 0, game_area.ratio, game_area.ratio)
+
+  
 
   -- button
   if button_state == 0 then
@@ -74,6 +73,9 @@ function love.draw()
   elseif button_state == 1 then
     love.graphics.draw(interactive_graphics.button_down.img, interactive_graphics.button_down.x, interactive_graphics.button_down.y, 0, interactive_graphics.button_down.sx, interactive_graphics.button_down.sy)
   end
+
+  
+  
 
   if show_debug_messages then
     love.graphics.setNewFont(12)
