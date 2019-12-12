@@ -14,6 +14,7 @@ function love.load()
 
   -- SET INITIAL VARIABLES
   game_state = 1
+  button_state = 0
   -- prize_key  = 'blue'
 
   -- SET WINDOWS RESOLUTION
@@ -28,7 +29,7 @@ function love.load()
   -- require('./prizes')
   -- require('./pong')
   require('./static_graphics')
-  -- require('./interactive_graphics')
+  require('./interactive_graphics')
   -- require('./animated_graphics')
   require('./physics')
 
@@ -66,6 +67,13 @@ function love.draw()
     love.graphics.setColor(1.0, 1.0, 1.0, 0.3)
   end
   love.graphics.draw(static_graphics.fg, game_area.pos.x.start, game_area.pos.y.start, 0, game_area.ratio, game_area.ratio)
+
+  -- button
+  if button_state == 0 then
+    love.graphics.draw(interactive_graphics.button_up.img, interactive_graphics.button_up.x, interactive_graphics.button_up.y, 0, interactive_graphics.button_up.sx, interactive_graphics.button_up.sy)
+  elseif button_state == 1 then
+    love.graphics.draw(interactive_graphics.button_down.img, interactive_graphics.button_down.x, interactive_graphics.button_down.y, 0, interactive_graphics.button_down.sx, interactive_graphics.button_down.sy)
+  end
 
   if show_debug_messages then
     love.graphics.setNewFont(12)

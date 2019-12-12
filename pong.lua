@@ -10,3 +10,5 @@ pong.img.red        = love.graphics.newImage("sprites/balls/red.png")
 pong.initial_pos    = {}
 pong.initial_pos.x  = 210
 pong.initial_pos.y  = 140
+pong.bounciness     = 0.3
+pong.body_radius    = 206/2
