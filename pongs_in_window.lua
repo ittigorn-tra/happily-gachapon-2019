@@ -2,10 +2,12 @@ pongs_in_window = {
   animation = new_animation(love.graphics.newImage("sprites/animated_graphics/pongs_in_window.png"), 567, 900, 1, 51),
 }
 
-function update_pongs_in_window(dt)
-  pongs_in_window.animation.currentTime = pongs_in_window.animation.currentTime + dt
-  if pongs_in_window.animation.currentTime >= pongs_in_window.animation.duration then
-    pongs_in_window.animation.currentTime = pongs_in_window.animation.currentTime - pongs_in_window.animation.duration
+function update_pongs_in_window(game_state, button_state, dt)
+  if (game_state == 2) or (button_state == 1) then
+    pongs_in_window.animation.currentTime = pongs_in_window.animation.currentTime + dt
+    if pongs_in_window.animation.currentTime >= pongs_in_window.animation.duration then
+      pongs_in_window.animation.currentTime = pongs_in_window.animation.currentTime - pongs_in_window.animation.duration
+    end
   end
 end
 

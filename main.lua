@@ -9,6 +9,10 @@ function set_default_alpha()
   love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 end
 
+function calc_distance(x1, y1, x2, y2)
+  return math.sqrt((y1 - y2)^2 + (x1 - x2)^2)
+end
+
 function new_animation(image, width, height, duration, frames)
   local animation = {}
   animation.spriteSheet = image;
@@ -42,7 +46,6 @@ function love.load()
 
   -- SET INITIAL VARIABLES
   game_state    = 1
-  button_state  = 0
   prize_key     = 'blue'
 
   -- SET WINDOWS RESOLUTION
@@ -65,7 +68,10 @@ function love.load()
   require('./prize_preview')
 
   -- states
-  require('./state_1')
+  require('./state_1') -- ready state
+  require('./state_2') -- shuffling state
+  require('./state_3') -- pong dropping state
+  require('./state_4') -- pong awaiting click state
 
   -- dev
   require('./debug')
@@ -81,9 +87,12 @@ function love.update(dt)
   world:update(dt) --this puts the world into motion
   update_prize_preview_bubble(dt)
 
-  button_state = check_button_clicked()
+  check_button_clicked(game_state)
 
   update_state_1(dt, game_state, conf)
+  update_state_2(dt, game_state, conf)
+
+  update_pongs_in_window(game_state, button_state, dt)
 
 end -- end love.update()
 
@@ -100,9 +109,12 @@ function love.draw()
   draw_pong(prize_key)                  -- draw pong
   draw_fg(game_area, conf)              -- draw fg
   draw_button(button_state)             -- draw button
+
   draw_prize_preview_bubble(game_area)  -- draw prize preview button
   draw_prize_preview_button(game_area)  -- draw prize preview button
   draw_prize_preview_popup(game_area, game_state)   -- draw prize preview popup
+
+  draw_prize(game_area, game_state, conf) -- draw prize and stars after clicking on pong
 
   -- dev drawings
   draw_barriers(conf)                   -- draw barriers
@@ -118,8 +130,14 @@ end -- end love.draw()
 function love.mousepressed( mx, my, mbutton, istouch, presses )
   if check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state) then
     enter_prize_preview_mode()
-  elseif check_closing_prize_preview(mx, my, mbutton, game_area, game_state) then
+  elseif check_closing_prize_preview(game_state) then
     reset_game_state()
+  elseif check_clicking_on_pong(mx, my, mbutton, game_state) then
+    leave_state_3()
+    enter_state_4()
+  elseif check_closing_prize(game_state) then
+    leave_state_4()
+    enter_state_1()
   end
 end
 

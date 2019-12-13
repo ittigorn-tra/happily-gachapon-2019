@@ -1,4 +1,6 @@
-------------------------- interactive graphics -------------------------
+button_state    = 0
+button_pressed  = false
+
 button = {}
 
 -- button up
@@ -22,18 +24,26 @@ function draw_button(button_state)
 end
 
 -- detect click on the button
-function check_button_clicked()
-  local button_state = 0
-  if love.mouse.isDown(1) or love.mouse.isDown(2) then
-    local mx, my = love.mouse.getPosition()
-    -- check if x, y is the same as button the image
-    if  (
-          (mx >= button.up.x) and (mx <= (button.up.x + (button.up.img:getWidth() * button.up.sx)))
-          and 
-          (my >= button.up.y) and (my <= (button.up.y + (button.up.img:getHeight() * button.up.sx)))
-        ) then
-      button_state = 1
+function check_button_clicked(game_state)
+  local b_state = 0
+  if game_state == 1 then
+    if love.mouse.isDown(1) or love.mouse.isDown(2) then
+      local mx, my = love.mouse.getPosition()
+      -- check if x, y is the same as button the image
+      if  (
+            (mx >= button.up.x) and (mx <= (button.up.x + (button.up.img:getWidth() * button.up.sx)))
+            and 
+            (my >= button.up.y) and (my <= (button.up.y + (button.up.img:getHeight() * button.up.sx)))
+          ) then
+        b_state         = 1
+        button_pressed  = true
+      end
+    else
+      if button_pressed then
+        leave_state_1()
+        enter_state_2()
+      end
     end
   end
-  return button_state
+  button_state = b_state
 end

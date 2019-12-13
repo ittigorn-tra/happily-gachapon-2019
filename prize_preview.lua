@@ -49,7 +49,7 @@ function check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state)
   end
 end
 
-function check_closing_prize_preview(mx, my, mbutton, game_area, game_state)
+function check_closing_prize_preview(game_state)
   if game_state == 10 then
     return true
   else
