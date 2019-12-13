@@ -2,7 +2,9 @@
 -- CLICK on button to play
 
 
-
+function set_default_alpha()
+  love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+end
 
 function love.load()
 
@@ -13,9 +15,9 @@ function love.load()
   require('./responsiveness')
 
   -- SET INITIAL VARIABLES
-  game_state = 1
-  button_state = 0
-  -- prize_key  = 'blue'
+  game_state    = 1
+  button_state  = 0
+  prize_key     = 'blue'
 
   -- SET WINDOWS RESOLUTION
   love.window.setTitle( 'Happily Gachapon' )
@@ -25,11 +27,11 @@ function love.load()
 
   -- import other modules
   require('./inventory_management')
--- require('./barriers')
+  -- require('./barriers')
   -- require('./prizes')
   -- require('./pong')
-  require('./static_graphics')
-  require('./interactive_graphics')
+  require('./graphics')
+  require('./button')
   require('./physics')
 
   -- animations
@@ -46,6 +48,9 @@ end -- end love.load()
 function love.update(dt)
   
   current_dt = dt
+  world:update(dt) --this puts the world into motion
+
+  button_state = check_button_clicked()
 
 end -- end love.update()
 
@@ -55,24 +60,14 @@ end -- end love.update()
 function love.draw()
 
   -- set solid alpha
-  love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+  set_default_alpha()
 
-  draw_bg(game_area)              -- draw bg
-  draw_pong_in_window(game_area)  -- pongs in window
-  draw_fg(game_area, conf)        -- draw fg
-
-  -- pong
-  -- love.graphics.draw(pong.img[prize_key], pong.body:getX(), pong.body:getY(), pong.body:getAngle(), nil, nil, pong.img[prize_key]:getWidth()/2, pong.img[prize_key]:getWidth()/2)
-
-
-  
-
-  -- button
-  if button_state == 0 then
-    love.graphics.draw(interactive_graphics.button_up.img, interactive_graphics.button_up.x, interactive_graphics.button_up.y, 0, interactive_graphics.button_up.sx, interactive_graphics.button_up.sy)
-  elseif button_state == 1 then
-    love.graphics.draw(interactive_graphics.button_down.img, interactive_graphics.button_down.x, interactive_graphics.button_down.y, 0, interactive_graphics.button_down.sx, interactive_graphics.button_down.sy)
-  end
+  draw_bg(game_area)                    -- draw bg
+  draw_pong_in_window(game_area, conf)  -- pongs in window
+  draw_pong(prize_key)                  -- draw pong
+  draw_fg(game_area, conf)              -- draw fg
+  draw_button(button_state)             -- draw button
+  draw_barriers(conf)                   -- draw barriers
 
   
   

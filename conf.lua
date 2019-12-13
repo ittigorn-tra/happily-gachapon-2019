@@ -1,9 +1,10 @@
 conf = {
 
   -- DEV VARIABLES
-  paint_hidden_structures   = false,
-  semi_transparent          = false,
   show_debug_messages       = false,
+  paint_hidden_structures   = true,
+  semi_transparent          = true,
+  semi_transparent_val      = 0.3,
 
   -- DISPLAY CONFIGS
   display                         = 2,

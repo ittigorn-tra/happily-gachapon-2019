@@ -1,3 +1,9 @@
+function reload_default_prize_qty()
+  for k, v in pairs(conf.prize_inventory_default) do
+    prizes[k].qty = v
+  end
+end
+
 function save_current_inventory(conf)
   local data = ""
   for k, v in pairs(prizes) do

@@ -33,9 +33,10 @@ barriers.wedge.body         = love.physics.newBody(world, barriers.wedge.w/2, ba
 barriers.wedge.shape        = love.physics.newRectangleShape(barriers.wedge.x, barriers.wedge.y, barriers.wedge.w, barriers.wedge.h, barriers.wedge.r)
 barriers.wedge.fixture      = love.physics.newFixture(barriers.wedge.body, barriers.wedge.shape)
 
-pong.body           = love.physics.newBody(world, pong.initial_pos.x, pong.initial_pos.y, "dynamic") --place the body in the center of the world and make it dynamic, so it can move around
+pong.body           = love.physics.newBody(world, pong.initial_pos.x, pong.initial_pos.y, "dynamic")
 pong.shape          = love.physics.newCircleShape(pong.body_radius)
 pong.fixture        = love.physics.newFixture(pong.body, pong.shape, 1) -- Attach fixture to body and give it a density of 1.
 pong.fixture:setRestitution(pong.bounciness) --let the ball bounce
+
 
 -- end physics objects setup
