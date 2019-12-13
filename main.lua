@@ -16,12 +16,12 @@ function new_animation(image, width, height, duration, frames)
 
   current_frame = 1
   for y = 0, image:getHeight() - height, height do
-      for x = 0, image:getWidth() - width, width do
-          if current_frame <= frames then
-              table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
-              current_frame = current_frame + 1
-          end
+    for x = 0, image:getWidth() - width, width do
+      if current_frame <= frames then
+          table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+          current_frame = current_frame + 1
       end
+    end
   end
 
   animation.duration = duration or 1
@@ -102,6 +102,7 @@ function love.draw()
   draw_button(button_state)             -- draw button
   draw_prize_preview_bubble(game_area)  -- draw prize preview button
   draw_prize_preview_button(game_area)  -- draw prize preview button
+  draw_prize_preview_popup(game_area, game_state)   -- draw prize preview popup
 
   -- dev drawings
   draw_barriers(conf)                   -- draw barriers
@@ -115,8 +116,10 @@ end -- end love.draw()
 
 --------------- CUSTOM FUNCTIONS --------------
 function love.mousepressed( mx, my, mbutton, istouch, presses )
-  if check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state, conf) then
+  if check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state) then
     enter_prize_preview_mode()
+  elseif check_closing_prize_preview(mx, my, mbutton, game_area, game_state) then
+    reset_game_state()
   end
 end
 
