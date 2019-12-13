@@ -8,7 +8,7 @@ function update_state_1(dt, game_state, conf)
   end
 end
 
-function check_if_in_state_1_pause_duration(conf)
+function check_if_not_in_state_1_pause_duration(conf)
   return state_1_timer >= conf.state_1_pause_duration
 end
 

@@ -24,7 +24,7 @@ function draw_button(button_state)
 end
 
 -- detect click on the button
-function check_button_clicked(game_state)
+function check_button_clicked(game_state, conf)
   local b_state = 0
   if game_state == 1 then
     if love.mouse.isDown(1) or love.mouse.isDown(2) then
@@ -34,6 +34,8 @@ function check_button_clicked(game_state)
             (mx >= button.up.x) and (mx <= (button.up.x + (button.up.img:getWidth() * button.up.sx)))
             and 
             (my >= button.up.y) and (my <= (button.up.y + (button.up.img:getHeight() * button.up.sx)))
+            and 
+            check_if_not_in_state_1_pause_duration(conf)
           ) then
         b_state         = 1
         button_pressed  = true

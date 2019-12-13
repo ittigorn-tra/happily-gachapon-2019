@@ -1,9 +1,9 @@
 conf = {
 
   -- DEV VARIABLES
-  show_debug_messages       = true,
-  paint_hidden_structures   = true,
-  semi_transparent          = true,
+  show_debug_messages       = false,
+  paint_hidden_structures   = false,
+  semi_transparent          = false,
   semi_transparent_val      = 0.3,
 
   -- DISPLAY CONFIGS
@@ -32,7 +32,7 @@ conf = {
   show_stars      = true,
   star = {
     speed         = 1000,
-    rotate_speed  = 1.5,
+    rotate_speed  = 2.0,
     scale_speed   = 1500, -- the lower the faster they scale UP
     fade_speed    = 1000, -- the lower the faster they fade IN
     max           = 40,

@@ -87,12 +87,15 @@ function love.update(dt)
   world:update(dt) --this puts the world into motion
   update_prize_preview_bubble(dt)
 
-  check_button_clicked(game_state)
+  check_button_clicked(game_state, conf)
 
   update_state_1(dt, game_state, conf)
   update_state_2(dt, game_state, conf)
 
   update_pongs_in_window(game_state, button_state, dt)
+
+  update_stars(dt, game_area, conf)
+  -- update_flies(dt, game_area, conf)
 
 end -- end love.update()
 
@@ -105,8 +108,8 @@ function love.draw()
   set_default_alpha()
 
   draw_bg(game_area)                    -- draw bg
-  draw_pong_in_window(game_area, conf)  -- pongs in window
   draw_pong(prize_key)                  -- draw pong
+  draw_pong_in_window(game_area, conf)  -- pongs in window
   draw_fg(game_area, conf)              -- draw fg
   draw_button(button_state)             -- draw button
 
@@ -131,7 +134,7 @@ function love.mousepressed( mx, my, mbutton, istouch, presses )
   if check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state) then
     enter_prize_preview_mode()
   elseif check_closing_prize_preview(game_state) then
-    reset_game_state()
+    enter_state_1()
   elseif check_clicking_on_pong(mx, my, mbutton, game_state) then
     leave_state_3()
     enter_state_4()
@@ -147,7 +150,7 @@ end
 function love.keypressed(k)
   if k == 'escape' then
     if (game_state == 4) or (game_state == 10) or (game_state == 20) then
-      reset_game_state()
+      enter_state_1()
     else
       love.event.quit()
     end
