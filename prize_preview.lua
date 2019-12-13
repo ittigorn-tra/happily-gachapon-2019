@@ -23,3 +23,23 @@ end
 function draw_prize_preview_button(game_area)
   love.graphics.draw(prize_preview.button.img, prize_preview.button.x, prize_preview.button.y, prize_preview.button.r, prize_preview.button.sx, prize_preview.button.sy)
 end
+
+function check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state, conf)
+  if  (
+    (mx >= prize_preview.button.x) and (mx <= prize_preview.button.x + (prize_preview.button.img:getWidth() * game_area.ratio)) 
+    and 
+    (my >= prize_preview.button.y) and (my <= prize_preview.button.y + (prize_preview.button.img:getHeight() * game_area.ratio)) 
+    and 
+    (game_state < 2) 
+    and
+    (check_if_in_state_1_pause_duration())
+  ) then
+    return true
+  else return false
+  end
+end
+
+function enter_prize_preview_mode()
+  leave_state_1()
+  game_state = 10
+end
