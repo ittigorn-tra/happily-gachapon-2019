@@ -27,7 +27,7 @@ conf = {
   prize_inventory_file            = "prize_inventory.txt",
   plus_button_offset_x            = -420,
   minus_button_offset_x           = -280,
-  plus_minus_button_offset_y      = 150*0.4,
+  plus_minus_button_offset_y      = 150 * 0.4,
 
   show_stars      = true,
   star = {

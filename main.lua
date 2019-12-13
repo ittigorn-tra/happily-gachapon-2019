@@ -6,6 +6,27 @@ function set_default_alpha()
   love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 end
 
+function new_animation(image, width, height, duration, frames)
+  local animation = {}
+  animation.spriteSheet = image;
+  animation.quads = {};
+
+  current_frame = 1
+  for y = 0, image:getHeight() - height, height do
+      for x = 0, image:getWidth() - width, width do
+          if current_frame <= frames then
+              table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+              current_frame = current_frame + 1
+          end
+      end
+  end
+
+  animation.duration = duration or 1
+  animation.currentTime = 0
+
+  return animation
+end
+
 function love.load()
 
   -- SEED RANDOM
@@ -35,8 +56,8 @@ function love.load()
   require('./physics')
 
   -- animations
-  require('./animated_graphics')
   require('./pongs_in_window')
+  require('./prize_preview')
 
 
 
@@ -49,6 +70,7 @@ function love.update(dt)
   
   current_dt = dt
   world:update(dt) --this puts the world into motion
+  update_prize_preview_bubble(dt)
 
   button_state = check_button_clicked()
 
@@ -67,11 +89,12 @@ function love.draw()
   draw_pong(prize_key)                  -- draw pong
   draw_fg(game_area, conf)              -- draw fg
   draw_button(button_state)             -- draw button
+  draw_prize_preview_bubble(game_area)  -- draw prize preview button
+  draw_prize_preview_button(game_area)  -- draw prize preview button
+
+  -- dev drawings
   draw_barriers(conf)                   -- draw barriers
-
   
-  
-
   if show_debug_messages then
     love.graphics.setNewFont(12)
     love.graphics.setColor(1.0, 1.0, 1.0, 0.8)

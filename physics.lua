@@ -38,5 +38,4 @@ pong.shape          = love.physics.newCircleShape(pong.body_radius)
 pong.fixture        = love.physics.newFixture(pong.body, pong.shape, 1) -- Attach fixture to body and give it a density of 1.
 pong.fixture:setRestitution(pong.bounciness) --let the ball bounce
 
-
 -- end physics objects setup
