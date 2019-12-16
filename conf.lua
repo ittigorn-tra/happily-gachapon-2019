@@ -17,13 +17,16 @@ conf = {
   -- CONFIGS
   sound_on                        = true,
   bg_music_on                     = true,
-  state_2_duration                = 2.0,
-  show_price_fade_percentage      = 0.7,
   default_bg_music_volume         = 0.8,
   dimmed_bg_music_volume          = 0.2,
-  state_1_pause_duration          = 0.7, -- pausing time before the button can be clicked again after entering this state
-  state_20_click_detection_duration = 1.5, -- must click n time within x seconds to enter state 20
-  state_20_click_activation       = 3, -- must click n time to enter state 20
+  bg_music_down_increment         = 0.5,
+  bg_music_up_increment           = 0.2,
+
+  state_2_duration                = 2.0,
+  show_price_fade_percentage      = 0.7,
+  state_1_pause_duration          = 0.7,    -- pausing time before the button can be clicked again after entering this state
+  state_20_click_detection_duration = 1.5,  -- must click n time within x seconds to enter state 20
+  state_20_click_activation       = 3,      -- must click n time to enter state 20
   prize_inventory_file            = "prize_inventory.txt",
   plus_button_offset_x            = -420,
   minus_button_offset_x           = -280,

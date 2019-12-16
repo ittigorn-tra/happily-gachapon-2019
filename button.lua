@@ -7,19 +7,23 @@ button = {}
 button.up = {
   img = love.graphics.newImage('sprites/interactive_graphics/button_up.png')
 }
-button.up = translate_dim(game_area, 740, 1080, nil, 1, 1, button.up)
+button.up = translate_dim(game_area, 844, 1184, nil, 1, 1, button.up)
+button.up.ox = (button.up.img:getWidth()  / 2)
+button.up.oy = (button.up.img:getHeight() / 2)
 
 -- button down
 button.down = {
   img = love.graphics.newImage('sprites/interactive_graphics/button_down.png')
 }
-button.down = translate_dim(game_area, 748, 1088, nil, 1, 1, button.down)
+button.down = translate_dim(game_area, 843, 1183, nil, 1, 1, button.down)
+button.down.ox = (button.down.img:getWidth()  / 2)
+button.down.oy = (button.down.img:getHeight() / 2)
 
 function draw_button(button_state)
   if button_state == 0 then
-    love.graphics.draw(button.up.img, button.up.x, button.up.y, 0, button.up.sx, button.up.sy)
+    love.graphics.draw(button.up.img, button.up.x, button.up.y, 0, button.up.sx, button.up.sy, button.up.ox, button.up.oy)
   elseif button_state == 1 then
-    love.graphics.draw(button.down.img, button.down.x, button.down.y, 0, button.down.sx, button.down.sy)
+    love.graphics.draw(button.down.img, button.down.x, button.down.y, 0, button.down.sx, button.down.sy, button.down.ox, button.down.oy)
   end
 end
 
@@ -31,14 +35,15 @@ function check_button_clicked(game_state, conf, dt)
       local mx, my = love.mouse.getPosition()
       -- check if x, y is the same as button the image
       if  (
-            (mx >= button.up.x) and (mx <= (button.up.x + (button.up.img:getWidth() * button.up.sx)))
-            and 
-            (my >= button.up.y) and (my <= (button.up.y + (button.up.img:getHeight() * button.up.sx)))
-            and 
-            check_if_not_in_state_1_pause_duration(conf)
-          ) then
+        (calc_distance(mx, my, button.up.x, button.up.y) <= ((button.up.img:getWidth() * button.up.sx) / 2)) 
+        and 
+        check_if_not_in_state_1_pause_duration(conf)
+        ) then
         b_state         = 1
-        button_pressed  = true
+        if not button_pressed then
+          button_pressed  = true
+          play_pressing_sound()
+        end
         if state_2_timer < conf.state_2_duration then
           state_2_timer = state_2_timer + dt
         end

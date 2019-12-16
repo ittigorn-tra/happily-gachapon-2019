@@ -57,7 +57,12 @@ function check_closing_prize_preview(game_state)
   end
 end
 
-function enter_prize_preview_mode()
+function enter_prize_preview_state()
   leave_state_1()
   game_state = 10
+  play_pressing_sound()
+end
+
+function leave_prize_preview_state()
+  play_pressing_sound()
 end

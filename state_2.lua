@@ -11,7 +11,7 @@ function update_state_2(dt, game_state, conf)
   end
 end
 
-function enter_state_2()
+function enter_state_2(conf)
   game_state = 2
 end
 

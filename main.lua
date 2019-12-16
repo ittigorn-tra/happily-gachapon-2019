@@ -61,6 +61,7 @@ function love.load()
   require('./barriers')
   require('./prizes')
   require('./pong')
+  require('./sounds')
   require('./physics')
 
   -- animations
@@ -97,6 +98,8 @@ function love.update(dt)
   update_stars(dt, game_area, conf)
   -- update_flies(dt, game_area, conf)
 
+  update_music_volume(conf, dt)
+
 end -- end love.update()
 
 
@@ -132,8 +135,9 @@ end -- end love.draw()
 --------------- CUSTOM FUNCTIONS --------------
 function love.mousepressed( mx, my, mbutton, istouch, presses )
   if check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state) then
-    enter_prize_preview_mode()
+    enter_prize_preview_state()
   elseif check_closing_prize_preview(game_state) then
+    leave_prize_preview_state()
     enter_state_1()
   elseif check_clicking_on_pong(mx, my, mbutton, game_state) then
     leave_state_3()
