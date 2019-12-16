@@ -87,7 +87,7 @@ function love.update(dt)
   world:update(dt) --this puts the world into motion
   update_prize_preview_bubble(dt)
 
-  check_button_clicked(game_state, conf)
+  check_button_clicked(game_state, conf, dt)
 
   update_state_1(dt, game_state, conf)
   update_state_2(dt, game_state, conf)

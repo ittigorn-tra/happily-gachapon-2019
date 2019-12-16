@@ -24,7 +24,7 @@ function draw_button(button_state)
 end
 
 -- detect click on the button
-function check_button_clicked(game_state, conf)
+function check_button_clicked(game_state, conf, dt)
   local b_state = 0
   if game_state == 1 then
     if love.mouse.isDown(1) or love.mouse.isDown(2) then
@@ -39,6 +39,9 @@ function check_button_clicked(game_state, conf)
           ) then
         b_state         = 1
         button_pressed  = true
+        if state_2_timer < conf.state_2_duration then
+          state_2_timer = state_2_timer + dt
+        end
       end
     else
       if button_pressed then

@@ -1,7 +1,7 @@
 conf = {
 
   -- DEV VARIABLES
-  show_debug_messages       = false,
+  show_debug_messages       = true,
   paint_hidden_structures   = false,
   semi_transparent          = false,
   semi_transparent_val      = 0.3,
