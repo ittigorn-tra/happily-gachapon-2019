@@ -61,8 +61,8 @@ function love.load()
   require('./barriers')
   require('./prizes')
   require('./pong')
-  require('./sounds')
   require('./physics')
+  require('./sounds')
 
   -- animations
   require('./pongs_in_window')
@@ -76,6 +76,8 @@ function love.load()
 
   -- dev
   require('./debug')
+
+  world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
 end -- end love.load()
 

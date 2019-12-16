@@ -27,10 +27,12 @@ if conf.bg_music_on and conf.sound_on then
   sounds.bg_music:play()
 end
 
-function play_sound_array(arr)
+function play_sound_array(arr, vol)
   if conf.sound_on then
+    vol = vol or 1.0
     for i, s in ipairs(arr) do
       if not s:isPlaying() then
+        s:setVolume(vol)
         s:play()
         break
       end
@@ -42,8 +44,8 @@ function play_pressing_sound()
   play_sound_array(sounds.press)
 end
 
-function play_colliding_sound()
-  play_sound_array(sounds.collide)
+function play_colliding_sound(vol)
+  play_sound_array(sounds.collide, vol)
 end
 
 function play_prize_sound(s)

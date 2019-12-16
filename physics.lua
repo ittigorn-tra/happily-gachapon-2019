@@ -1,10 +1,8 @@
 -- SET UP PHYSICS
 love.physics.setMeter(64) --the height of a meter our worlds will be 64px
 world = love.physics.newWorld(0, 9.81 * 64, true) --create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81
-world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
 -- physics objects setup
-
 barriers.barrier_l.body     = love.physics.newBody(world, barriers.barrier_l.w/2, barriers.barrier_l.h/2)
 barriers.barrier_l.shape    = love.physics.newRectangleShape(barriers.barrier_l.x, barriers.barrier_l.y, barriers.barrier_l.w, barriers.barrier_l.h)
 barriers.barrier_l.fixture  = love.physics.newFixture(barriers.barrier_l.body, barriers.barrier_l.shape)
@@ -35,3 +33,18 @@ pong.fixture        = love.physics.newFixture(pong.body, pong.shape, 1) -- Attac
 pong.fixture:setRestitution(pong.bounciness) --let the ball bounce
 
 -- end physics objects setup
+
+function beginContact(a, b, coll)
+  if pong.body:getY() > (1000 * game_area.ratio) then
+    local x, y = pong.body:getLinearVelocity()
+    local vol = 1.0
+    if math.abs(x) + math.abs(y) < 500 then
+      vol = .3
+    elseif  math.abs(x) + math.abs(y) < 100 then
+      vol = .1
+    elseif  math.abs(x) + math.abs(y) < 50 then
+      vol = .02
+    end
+    play_colliding_sound(vol)
+  end
+end
