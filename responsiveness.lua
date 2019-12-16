@@ -62,3 +62,20 @@ function translate_dim(game_area, x, y, r, sx, sy, concat_table)
     return concat_table
   end
 end
+
+function check_mouse_within_graphic(mx, my, game_area, graphic)
+  if (
+    (mx >= graphic.x)
+    and
+    (mx <= graphic.x + (graphic.img:getWidth() * graphic.sx))
+    and
+    (my >= graphic.y)
+    and
+    (my <= graphic.y + (graphic.img:getHeight() * graphic.sx))
+    )
+    then
+    return true
+  else
+    return false
+  end
+end

@@ -27,6 +27,7 @@ conf = {
   state_1_pause_duration          = 0.7,    -- pausing time before the button can be clicked again after entering this state
   state_20_click_detection_duration = 1.5,  -- must click n time within x seconds to enter state 20
   state_20_click_activation       = 3,      -- must click n time to enter state 20
+  state_20_fade_percentage        = 0.8,
   prize_inventory_file            = "prize_inventory.txt",
   plus_button_offset_x            = -420,
   minus_button_offset_x           = -280,
@@ -70,5 +71,17 @@ conf = {
     gold      = 11,    -- T-Shirt
     purple    = 200    -- Candy
   },
+
+  -- SETTINGS PAGE
+  config_pong_offset        = {
+    x={
+      start=270
+    },
+    y={
+      start=300,
+      increment=250
+    },
+  },
+  config_pong_font_size = 50,
 
 }

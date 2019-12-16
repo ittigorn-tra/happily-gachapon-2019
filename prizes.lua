@@ -39,6 +39,8 @@ for k, v in pairs(prizes) do
   end
 end
 
+-- functions
+
 function determine_prize(conf)
   rand_x = love.math.random(0, 99)
   local prize_available = false

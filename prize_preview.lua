@@ -36,13 +36,7 @@ function draw_prize_preview_popup(game_area, game_state)
 end
 
 function check_clicking_on_prize_preview(mx, my, mbutton, game_area, game_state)
-  if  (
-    (mx >= prize_preview.button.x) and (mx <= prize_preview.button.x + (prize_preview.button.img:getWidth() * game_area.ratio)) 
-    and 
-    (my >= prize_preview.button.y) and (my <= prize_preview.button.y + (prize_preview.button.img:getHeight() * game_area.ratio)) 
-    and 
-    (game_state < 2) 
-  ) then
+  if check_mouse_within_graphic(mx, my, game_area, prize_preview.button) and (game_state < 2) then
     return true
   else
     return false

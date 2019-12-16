@@ -55,12 +55,13 @@ function love.load()
   game_area = calc_game_area(conf.default_width, conf.default_height, conf.default_ratio, conf.screen_width, conf.screen_height)
 
   -- import modules
+  require('./pong')
   require('./inventory_management')
   require('./graphics')
   require('./button')
   require('./barriers')
   require('./prizes')
-  require('./pong')
+
   require('./physics')
   require('./sounds')
 
@@ -94,6 +95,7 @@ function love.update(dt)
 
   update_state_1(dt, game_state, conf)
   update_state_2(dt, game_state, conf)
+  update_state_20(dt)
 
   update_pongs_in_window(game_state, button_state, dt)
 
@@ -124,6 +126,8 @@ function love.draw()
 
   draw_prize(game_area, game_state, conf) -- draw prize and stars after clicking on pong
 
+  draw_inventory_settings(game_area, game_state, conf)
+
   -- dev drawings
   draw_barriers(conf)                   -- draw barriers
   draw_debug_section(game_area, conf)
@@ -147,6 +151,13 @@ function love.mousepressed( mx, my, mbutton, istouch, presses )
   elseif check_closing_prize(game_state) then
     leave_state_4()
     enter_state_1()
+  elseif check_opening_inventory_settings(mx, my, game_area, game_state, conf) then
+    enter_state_20()
+  elseif check_closing_inventory_settings(mx, my, game_area, game_state) then
+    leave_state_20()
+    enter_state_1()
+  elseif check_clicking_on_settings(mx, my, game_area, game_state) then
+    
   end
 end
 

@@ -8,6 +8,19 @@ function load_sound_array(path, arr_size)
   return sound_arr
 end
 
+function start_bg_music()
+  if conf.bg_music_on and conf.sound_on then
+    sounds.bg_music:setVolume(conf.default_bg_music_volume)
+    sounds.bg_music:play()
+  end
+end
+
+function stop_bg_music()
+  if sounds.bg_music:isPlaying() then
+    sounds.bg_music:stop()
+  end
+end
+
 -- sounds
 sounds                = {}
 
@@ -22,10 +35,7 @@ sounds.prize          = {}
 sounds.prize.success  = love.audio.newSource("sounds/success.mp3", "stream")
 sounds.prize.fail     = love.audio.newSource("sounds/fail.mp3", "stream")
 
-if conf.bg_music_on and conf.sound_on then
-  sounds.bg_music:setVolume(conf.default_bg_music_volume)
-  sounds.bg_music:play()
-end
+start_bg_music()
 
 function play_sound_array(arr, vol)
   if conf.sound_on then
