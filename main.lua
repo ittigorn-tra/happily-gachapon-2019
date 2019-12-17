@@ -50,7 +50,8 @@ function love.load()
 
   -- SET WINDOWS RESOLUTION
   love.window.setTitle( 'Happily Gachapon' )
-  love.window.setMode( 0, 0, {fullscreen=conf.fullscreen, fullscreentype = conf.fullscreentype, display=conf.display} )
+  -- love.window.setMode( 0, 0, {fullscreen=conf.fullscreen, fullscreentype=conf.fullscreentype, display=conf.display} )
+  love.window.setMode( 0, 0, {fullscreen=conf.fullscreen, fullscreentype=conf.fullscreentype} )
   conf.screen_width, conf.screen_height = love.graphics.getWidth(), love.graphics.getHeight()
   game_area = calc_game_area(conf.default_width, conf.default_height, conf.default_ratio, conf.screen_width, conf.screen_height)
 
