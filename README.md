@@ -116,7 +116,7 @@ Add-on for converting Google Docs to markdown is available at the link below:
 
 
 ## Previews
-![Preview 1]<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview1.png" width="50%" height="50%">
-![Preview 2]<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview2.png" width="50%" height="50%">
-![Preview 3]<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview3.png" width="50%" height="50%">
-![Preview 4]<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview4.png" width="50%" height="50%">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview1.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview2.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview3.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview4.png" width="305px" height="540px">
