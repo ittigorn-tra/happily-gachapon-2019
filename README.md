@@ -1,7 +1,7 @@
 <!-----
 NEW: Check the "Suppress top comment" option to remove this info from the output.
 
-Conversion time: 0.566 seconds.
+Conversion time: 0.539 seconds.
 
 
 Using this Markdown file:
@@ -14,7 +14,7 @@ Using this Markdown file:
 Conversion notes:
 
 * Docs to Markdown version 1.0β31
-* Mon Sep 27 2021 20:21:21 GMT-0700 (PDT)
+* Mon Sep 27 2021 20:27:52 GMT-0700 (PDT)
 * Source doc: Happily Gachapon 2019 README
 ----->
 
@@ -117,4 +117,10 @@ Add-on for converting Google Docs to markdown is available at the link below:
 
 ## Previews
 
-![Preview 1](./README_images/preview1.png)
+![Preview 1](./resources/preview_images/preview1.png){:height="50%" width="50%"}
+
+![Preview 2](./resources/preview_images/preview2.png){:height="50%" width="50%"}
+
+![Preview 3](./resources/preview_images/preview3.png){:height="50%" width="50%"}
+
+![Preview 4](./resources/preview_images/preview4.png){:height="50%" width="50%"}
