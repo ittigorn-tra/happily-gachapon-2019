@@ -1,7 +1,7 @@
 <!-----
 NEW: Check the "Suppress top comment" option to remove this info from the output.
 
-Conversion time: 0.415 seconds.
+Conversion time: 0.566 seconds.
 
 
 Using this Markdown file:
@@ -14,7 +14,7 @@ Using this Markdown file:
 Conversion notes:
 
 * Docs to Markdown version 1.0β31
-* Mon Sep 27 2021 19:36:25 GMT-0700 (PDT)
+* Mon Sep 27 2021 20:21:21 GMT-0700 (PDT)
 * Source doc: Happily Gachapon 2019 README
 ----->
 
@@ -66,6 +66,7 @@ Find out more about Happily app at [happily.ai](https://www.happily.ai/)
 
     `"C:\Program Files\LOVE\love.exe" C:\personal_projects\happily-gachapon-2019`
 
+4. Press `ESC` to exit the game
 
 
 ##### Notes
@@ -112,3 +113,8 @@ Add-on for converting Google Docs to markdown is available at the link below:
 
 * Single-cell table will be converted to a code block
 * See [https://github.com/evbacher/gd2md-html/wiki](https://github.com/evbacher/gd2md-html/wiki) for docs
+
+
+## Previews
+
+![Preview 1](./README_images/preview1.png)
