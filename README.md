@@ -116,11 +116,9 @@ Add-on for converting Google Docs to markdown is available at the link below:
 
 
 ## Previews
-
-![Preview 1](./resources/preview_images/preview1.png){:height="50%" width="50%"}
-
-![Preview 2](./resources/preview_images/preview2.png){:height="50%" width="50%"}
-
-![Preview 3](./resources/preview_images/preview3.png){:height="50%" width="50%"}
-
-![Preview 4](./resources/preview_images/preview4.png){:height="50%" width="50%"}
+{:refdef: style="width: 50%; height: 50%"}
+![Preview 1](./resources/preview_images/preview1.png)
+![Preview 2](./resources/preview_images/preview2.png)
+![Preview 3](./resources/preview_images/preview3.png)
+![Preview 4](./resources/preview_images/preview4.png)
+{: refdef}
