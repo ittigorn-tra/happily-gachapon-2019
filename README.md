@@ -1,7 +1,7 @@
 <!-----
 NEW: Check the "Suppress top comment" option to remove this info from the output.
 
-Conversion time: 0.491 seconds.
+Conversion time: 0.415 seconds.
 
 
 Using this Markdown file:
@@ -14,7 +14,7 @@ Using this Markdown file:
 Conversion notes:
 
 * Docs to Markdown version 1.0β31
-* Mon Sep 27 2021 19:30:27 GMT-0700 (PDT)
+* Mon Sep 27 2021 19:36:25 GMT-0700 (PDT)
 * Source doc: Happily Gachapon 2019 README
 ----->
 
@@ -28,6 +28,16 @@ Conversion notes:
 This is a LOVE2D game for Happily booth in HR Tech event at Impact Arena, Muang Thong Thani where it was deployed on a touch screen TV.
 
 Find out more about Happily app at [happily.ai](https://www.happily.ai/)
+
+
+## Features
+
+
+
+* Inventory management (control how many rewards left in the winning pool) by tapping 3 times at the Happily emblem
+* Rewards showcase
+* Realistic physics
+* Responsive design
 
 
 ## Prerequisite
