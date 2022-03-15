@@ -86,42 +86,17 @@ Find out more about Happily app at [happily.ai](https://www.happily.ai/)
 
 
 ## Previews
+
+### Screenshots
 <p>
-<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview1.png" width="305px" height="540px">
-<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview2.png" width="305px" height="540px">
-<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview3.png" width="305px" height="540px">
-<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/preview_images/preview4.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/main/resources/preview_images/preview1.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/main/resources/preview_images/preview2.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/main/resources/preview_images/preview3.png" width="305px" height="540px">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/main/resources/preview_images/preview4.png" width="305px" height="540px">
 </p>
-<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/booth2.jpg">
-<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/master/resources/booth1.jpg">
 
-
-## Miscellaneous
-
-
-### Markdown Converter
-
-Add-on for converting Google Docs to markdown is available at the link below:
-
-[https://workspace.google.com/marketplace/app/docs_to_markdown/700168918607](https://workspace.google.com/marketplace/app/docs_to_markdown/700168918607)
-
-
-#### How to use:
-
-
-
-1. Go to the link posted above
-2. Install and give the add-on the permissions it needs
-3. Open the target Google Docs file
-4. Click “Add-ons” on the menu bar
-5. Find “Docs to Markdown” -> “Convert”, a panel will open on the right
-6. (optional) Select “Suppress top comment”
-7. Click “Markdown” on the recently opened panel, the converted markdown should be automatically copied to your clipboard
-
-
-#### Notes:
-
-
-
-* Single-cell table will be converted to a code block
-* See [https://github.com/evbacher/gd2md-html/wiki](https://github.com/evbacher/gd2md-html/wiki) for docs
+### Actual Event
+<p>
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/main/resources/booth2.jpg">
+<img src="https://github.com/ittigorn-tra/happily-gachapon-2019/blob/main/resources/booth1.jpg">
+</p>
